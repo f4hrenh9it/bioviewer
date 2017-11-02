@@ -1,0 +1,9 @@
+/**
+ * Created by a1 on 14.08.17.
+ */
+export const RECEIVE_CARDS = 'RECEIVE_CARDS';
+export const REFRESH_CARDS = 'REFRESH_CARDS';
+export const RECEIVE_CARDS_ERR = 'RECEIVE_CARDS_ERR';
+export const ADD_AMOUNT = 'ADD_AMOUNT';
+export const APPEND_COLLECTION = 'APPEND_COLLECTION';
+export const RECEIVE_CARDS_MULTIPLE = 'RECEIVE_CARDS_MULTIPLE';

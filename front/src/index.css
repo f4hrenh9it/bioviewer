@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.marg {
+    margin-top: auto;
+}
+
+.brand-marg {
+    padding: 6px !important;
+    padding-right: 10px !important;
+}
+
+#wrap > .container {
+
+    padding-top: 70px;
+    padding-right: 15px;
+    padding-bottom: 0;
+    padding-left: 15px;
+}
+
+.navbar {
+    padding-top: 15px;
+}

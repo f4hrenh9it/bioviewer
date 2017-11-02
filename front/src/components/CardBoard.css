@@ -1,0 +1,27 @@
+.well-lg {
+    background-color: #999999;
+}
+
+
+
+*, *:before, *:after {
+    box-sizing: border-box !important;
+}
+
+/*row item and well next is doing pinterest like GRID*/
+.row {
+    -moz-column-width: 18em;
+    -webkit-column-width: 18em;
+    -moz-column-gap: 1em;
+    -webkit-column-gap: 1em;
+
+}
+.item {
+    display: inline-block;
+    padding: .25rem;
+    width: 100%;
+}
+.well {
+    position: relative;
+    display: block;
+}
