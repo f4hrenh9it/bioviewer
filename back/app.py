@@ -3,6 +3,7 @@ import re
 import string
 from random import choice, randint
 import uuid
+from hbase_collector import HBaseExtractor
 
 from flask import Flask
 
@@ -51,6 +52,11 @@ def generate_multiple(rule):
     for u in range(0, randint(int(min_col), int(max_col))):
         cols[str(uuid.uuid4())] = generate_collection(randint(5, 15))
     return json.dumps(cols)
+
+@app.route('/originals')
+def originals():
+    hb = HBaseExtractor('fr00nbphbase01')
+    hb.load_tables(['ids_esia', 'template_photo', 'original_photo'])
 
 if __name__ == '__main__':
     generate_default_collection()
