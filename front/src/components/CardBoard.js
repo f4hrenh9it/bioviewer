@@ -22,6 +22,7 @@ import {
     fetchSingleCollection,
     refreshNReceiveMultipleCollections
 } from '../actions/index'
+import {fetchSingleProfile} from "../actions";
 
 
 function CardBoard({deck_multiple, last_range_multiple, last_append_collection,
@@ -82,7 +83,10 @@ const mapDispatchToProps = dispatch => ({
     addLastRangeMultiple: (last_range_multiple) => dispatch(addLastRangeMultiple(last_range_multiple)),
     addLastAppendCollection: (last_append_collection) => dispatch(addLastAppendCollection(last_append_collection)),
     fetchSingleCollection: (amount) => dispatch(fetchSingleCollection(amount)),
-    refreshNReceiveMultipleCollections: (colRange) => dispatch(refreshNReceiveMultipleCollections(colRange))
+    refreshNReceiveMultipleCollections: (colRange) => dispatch(refreshNReceiveMultipleCollections(colRange)),
+
+    //new
+    fetchSingleProfile: (idp, userid) => dispatch(fetchSingleProfile(idp, userid))
 });
 
 export default connect(

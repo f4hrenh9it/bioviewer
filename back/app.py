@@ -3,7 +3,7 @@ import re
 import string
 from random import choice, randint
 import uuid
-from hbase_collector import HBaseExtractor
+
 
 from flask import Flask
 
@@ -55,8 +55,9 @@ def generate_multiple(rule):
 
 @app.route('/originals')
 def originals():
-    hb = HBaseExtractor('fr00nbphbase01')
-    hb.load_tables(['ids_esia', 'template_photo', 'original_photo'])
+    pass
+    # hb = HBaseExtractor('fr00nbphbase01')
+    # hb.load_tables(['ids_esia', 'template_photo', 'original_photo'])
 
 if __name__ == '__main__':
     generate_default_collection()

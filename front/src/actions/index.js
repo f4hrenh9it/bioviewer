@@ -2,7 +2,7 @@
  * Created by a1 on 13.08.17.
  */
 import * as log from 'loglevel';
-import {RECEIVE_CARDS_MULTIPLE, ADD_AMOUNT, RECEIVE_CARDS, APPEND_COLLECTION, RECEIVE_CARDS_ERR} from '../constants/ActionTypes'
+import {RECEIVE_CARDS_MULTIPLE, ADD_AMOUNT, RECEIVE_CARDS, APPEND_COLLECTION, RECEIVE_CARDS_ERR, BAD_USER_ID_ERR} from '../constants/ActionTypes'
 
 export const addLastRangeMultiple = last_range_multiple => ({
     type: ADD_AMOUNT,
@@ -13,6 +13,19 @@ export const addLastAppendCollection = last_collection => ({
     type: APPEND_COLLECTION,
     last_collection
 });
+
+export const fetchSingleProfile = (idp, userid) => (dispatch) => {
+    if (!/(\d+)/.test(userid)) {
+        return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
+    }
+    return fetch('http://localhost:8080/profile/' + idp + "/" + userid)
+        .then((resp) => resp.json())
+        .then((json) => {
+            log.info('data from /profile -->> ' + JSON.stringify(json));
+            dispatch(receiveCards(json))
+        })
+        .catch((err) => dispatch(receiveCardsErr(err)))
+};
 
 export const fetchSingleCollection = amount => (dispatch, getState) => {
     if (!/(\d+)/.test(amount)) {
@@ -52,5 +65,10 @@ export const receiveCards = (json) => ({
 
 export const receiveCardsErr = (err) => ({
     type: RECEIVE_CARDS_ERR,
+    err: err
+});
+
+export const badUserIdErr = (err) => ({
+    type: BAD_USER_ID_ERR,
     err: err
 });
