@@ -25,6 +25,9 @@ func GetInternalKey(idp string, userid string) ([]byte, error) {
 	getRequest, err := hrpc.NewGetStr(context.Background(), IDPPREFIX+idp, userid, hrpc.Families(family))
 	util.CheckErr(err)
 	getRsp, err := client.Get(getRequest)
+	if len(getRsp.Cells) == 0 {
+		return nil, errors.New("пользователь не зарегистрирован в idp")
+	}
 	if len(getRsp.Cells) > 1 {
 		return nil, errors.New("несколько внутненних ключей на один внешний")
 	}

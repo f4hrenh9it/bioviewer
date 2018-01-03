@@ -2,7 +2,7 @@
   "name": "bioviewer",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://127.0.0.1:5001",
+  "proxy": "http://127.0.0.1:8080",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "flow-bin": "^0.52.0",

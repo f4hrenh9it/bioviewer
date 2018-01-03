@@ -20,14 +20,17 @@ import {
     addLastAppendCollection,
     addLastRangeMultiple,
     fetchSingleCollection,
-    refreshNReceiveMultipleCollections
+    refreshNReceiveMultipleCollections,
+    addUserId,
+    fetchSingleProfile
 } from '../actions/index'
-import {fetchSingleProfile} from "../actions";
+// import {fetchSingleProfile} from "../actions";
 
 
 function CardBoard({deck_multiple, last_range_multiple, last_append_collection,
                        addLastRangeMultiple, addLastAppendCollection,
-                       fetchSingleCollection, refreshNReceiveMultipleCollections}) {
+                       fetchSingleCollection, refreshNReceiveMultipleCollections,
+                       addUserId, userid, fetchSingleProfile}) {
 
     function handleChangeLastRange(event) {
         event.preventDefault();
@@ -39,25 +42,30 @@ function CardBoard({deck_multiple, last_range_multiple, last_append_collection,
         addLastAppendCollection(event.target.value);
     }
 
-    log.info('Cardboard deck_multiple -->> ' + JSON.stringify(deck_multiple));
-    log.info('Cardboard last_range_multiple -->> ' + last_range_multiple);
+    function handleChangeIds(event) {
+        event.preventDefault();
+        addUserId(event.target.value)
+    }
+
+    // log.info('Cardboard deck_multiple -->> ' + JSON.stringify(deck_multiple));
+    // log.info('Cardboard last_range_multiple -->> ' + last_range_multiple);
 
     return (
         <div id="wrap">
             <Navbar className="navbar-fixed-top">
                 <a className="navbar-brand brand-marg" href="#">Cards</a>
                 <div className="col-xs-2">
-                    <FormControl className="btn-block" placeholder="Num of elements"
-                                 onChange={(e) => handleChangeAppendCollection(e)}/>
+                    <FormControl className="btn-block" placeholder="IDP ID пользователя"
+                                 onChange={(e) => handleChangeIds(e)}/>
+                </div>
+                <div className="col-xs-2">
+                    <FormControl className="btn-block" placeholder="IDP name" onChange={(e) => handleChangeLastRange(e)}/>
                 </div>
                 <div className="col-xs-2">
                     <Button className="btn btn-primary btn-block"
-                            onClick={() => fetchSingleCollection(last_append_collection)}>
-                        Add collections
+                            onClick={() => fetchSingleProfile(userid)}>
+                        Fetch Profile
                     </Button>
-                </div>
-                <div className="col-xs-2">
-                    <FormControl className="btn-block" placeholder="min_col - max_col" onChange={(e) => handleChangeLastRange(e)}/>
                 </div>
                 <div className="col-xs-2">
                     <Button className="btn btn-danger btn-block" onClick={() => refreshNReceiveMultipleCollections(last_range_multiple)}>
@@ -76,7 +84,9 @@ function CardBoard({deck_multiple, last_range_multiple, last_append_collection,
 const mapStateToProps = state => ({
     deck_multiple: state.cards_multiple_reducer,
     last_range_multiple: state.last_range_multiple_reducer,
-    last_append_collection: state.last_collection_reducer
+    last_append_collection: state.last_collection_reducer,
+    userid: state.userid_reducer,
+    singleProfile: state.profile_reducer,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -86,7 +96,8 @@ const mapDispatchToProps = dispatch => ({
     refreshNReceiveMultipleCollections: (colRange) => dispatch(refreshNReceiveMultipleCollections(colRange)),
 
     //new
-    fetchSingleProfile: (idp, userid) => dispatch(fetchSingleProfile(idp, userid))
+    fetchSingleProfile: (userid) => dispatch(fetchSingleProfile(userid)),
+    addUserId: (userid) => dispatch(addUserId(userid))
 });
 
 export default connect(
