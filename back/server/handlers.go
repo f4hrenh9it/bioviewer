@@ -9,7 +9,7 @@ import (
 func GetRegisterProfile(c *gin.Context) {
 	idp := c.Param("idp")
 	id := c.Param("id")
-	logger.Slog.Infow("Getting profile by idp and id",
+	logger.Slog.Infow("Получаем профиль по idp и id",
 		"idp", idp,
 		"id", id)
 	intKey, err := hbase.GetInternalKey(idp, id)

@@ -27,7 +27,6 @@ export const fetchSingleProfile = (userid) => (dispatch, getState) => {
     return fetch('http://localhost:8080/profile/' + "esia" + "/" + userid)
         .then((resp) => resp.json())
         .then((resp) => {
-            log.info('data from /profile -->> ' + JSON.stringify(resp));
             dispatch(receiveProfile(resp))
         })
         .catch((err) => dispatch(receiveProfileErr(err)))

@@ -6,10 +6,9 @@
  * Created by a1 on 11.08.17.
  */
 import React from 'react';
-import Collections from './Collection';
 import CollectionError from './CollectionError';
 
-import './CardBoard.css';
+import './ProfileBoard.css';
 
 import {FormControl, Button, Navbar} from 'react-bootstrap';
 
@@ -24,13 +23,13 @@ import {
     addUserId,
     fetchSingleProfile
 } from '../actions/index'
-// import {fetchSingleProfile} from "../actions";
+import Profile from "./Profile";
 
 
-function CardBoard({deck_multiple, last_range_multiple, last_append_collection,
+function ProfileBoard({deck_multiple, last_range_multiple, last_append_collection,
                        addLastRangeMultiple, addLastAppendCollection,
                        fetchSingleCollection, refreshNReceiveMultipleCollections,
-                       addUserId, userid, fetchSingleProfile}) {
+                       addUserId, userid, fetchSingleProfile, singleProfile}) {
 
     function handleChangeLastRange(event) {
         event.preventDefault();
@@ -47,15 +46,12 @@ function CardBoard({deck_multiple, last_range_multiple, last_append_collection,
         addUserId(event.target.value)
     }
 
-    // log.info('Cardboard deck_multiple -->> ' + JSON.stringify(deck_multiple));
-    // log.info('Cardboard last_range_multiple -->> ' + last_range_multiple);
-
     return (
         <div id="wrap">
             <Navbar className="navbar-fixed-top">
-                <a className="navbar-brand brand-marg" href="#">Cards</a>
+                <a className="navbar-brand brand-marg" href="#">BioViewer</a>
                 <div className="col-xs-2">
-                    <FormControl className="btn-block" placeholder="IDP ID пользователя"
+                    <FormControl className="btn-block" placeholder="IDP ID пользователя" defaultValue="240631324"
                                  onChange={(e) => handleChangeIds(e)}/>
                 </div>
                 <div className="col-xs-2">
@@ -75,7 +71,7 @@ function CardBoard({deck_multiple, last_range_multiple, last_append_collection,
             </Navbar>
             {/*Masonry imitation using bootstrap styles for .row .item .well*/}
             <div className="container">
-                {deck_multiple.error ? <CollectionError/> : <Collections collections={deck_multiple}/>}
+                <Profile profile={singleProfile}/>
             </div>
         </div>
     );
@@ -103,4 +99,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(CardBoard);
+)(ProfileBoard);

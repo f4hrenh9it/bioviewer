@@ -1,7 +1,7 @@
 package hbase
 
 type BioRegisterProfile struct {
-	Name           string   `json:"name"`
+	IdpId           string   `json:"idpid"`
 	PhotoOriginals [][]byte `json:"photos"`
 	SoundOriginals [][]byte `json:"sounds"`
 }

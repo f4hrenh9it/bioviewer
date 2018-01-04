@@ -5,10 +5,7 @@ export const profile_reducer = (state = {}, action) => {
         case RECEIVE_PROFILE:
             return action.singleProfile;
         case RECEIVE_PROFILE_ERR:
-            return {
-                ...state,
-                ...action.err
-            };
+            return action.err;
         default:
             return state
     }
