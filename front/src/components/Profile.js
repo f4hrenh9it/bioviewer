@@ -1,29 +1,16 @@
-/**
- * Created by a1 on 15.08.17.
- */
 import React from 'react';
 import './Profile.css';
-import {Well} from 'react-bootstrap';
+import {ProfileRegisterInfo} from "./ProfileRegisterInfo";
+import {Jumbotron} from 'react-bootstrap'
 
-const Profile = (props) => (
-    <div className="row">
-        {(props.profile.idpid && <RenderProfile profile={props.profile}/>) || <RenderNoData/>}
-    </div>
+export const Profile = (props) => (
+    <ProfileRegisterInfo profile={props.profile}/>
 );
 
-const RenderProfile = (props) => (
-    <div className="item">
-        <Well bsSize="small">
-            Idp идентификатор: {props.profile.idpid}
-        </Well>
-        <Well>
-            <img src={"data:image/jpeg;base64," + props.profile.photos[0]}/>
-        </Well>
-    </div>
+export const ProfileEmpty = () => (
+    <Jumbotron>
+        <h3 className="text-center">
+            Нет данных!
+        </h3>
+    </Jumbotron>
 );
-
-const RenderNoData = () => {
-    return <p>Нет данных!</p>
-};
-
-export default Profile;

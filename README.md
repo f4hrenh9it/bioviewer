@@ -2,10 +2,11 @@
 
 Фронт:
 
-npm start
+npm start (дебажный сервер для связки компонентов с бэком)
+yarn run storybook (окружение для независимой разработки компонентов)
 
 Бэк:
 
-python3.6 app.py
+go build && ./back
 
--->> localhost:3000 -->> localhost:5001
+-->> localhost:3000 -->> localhost:8080

@@ -1,14 +1,24 @@
 package hbase
 
 type BioRegisterProfile struct {
-	IdpId           string   `json:"idpid"`
+	IdpId          string   `json:"idpid"`
+	FirstName      string   `json:"firstname"`
+	LastName       string   `json:"lastname"`
+	SecondName     string   `json:"secondname"`
+	Gender         string   `json:"gender"`
+	Age            int      `json:"age"`
 	PhotoOriginals [][]byte `json:"photos"`
 	SoundOriginals [][]byte `json:"sounds"`
 }
 
-func NewBioRegisterProfile(name string, photos [][]byte, sounds [][]byte) *BioRegisterProfile {
+func NewBioRegisterProfile(idpId string, firstName string, lastName string, secondName string, gender string, age int, photos [][]byte, sounds [][]byte) *BioRegisterProfile {
 	return &BioRegisterProfile{
-		name,
+		idpId,
+		firstName,
+		lastName,
+		secondName,
+		gender,
+		age,
 		photos,
 		sounds,
 	}

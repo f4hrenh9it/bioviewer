@@ -6,9 +6,6 @@
  * Created by a1 on 11.08.17.
  */
 import React from 'react';
-import CollectionError from './CollectionError';
-
-import './ProfileBoard.css';
 
 import {FormControl, Button, Navbar} from 'react-bootstrap';
 
@@ -21,29 +18,25 @@ import {
     fetchSingleCollection,
     refreshNReceiveMultipleCollections,
     addUserId,
+    addUserIdp,
     fetchSingleProfile
 } from '../actions/index'
-import Profile from "./Profile";
+
+import {Profile, ProfileEmpty} from "./Profile";
+import './Profile.css';
 
 
-function ProfileBoard({deck_multiple, last_range_multiple, last_append_collection,
-                       addLastRangeMultiple, addLastAppendCollection,
-                       fetchSingleCollection, refreshNReceiveMultipleCollections,
-                       addUserId, userid, fetchSingleProfile, singleProfile}) {
-
-    function handleChangeLastRange(event) {
-        event.preventDefault();
-        addLastRangeMultiple(event.target.value);
-    }
-
-    function handleChangeAppendCollection(event) {
-        event.preventDefault();
-        addLastAppendCollection(event.target.value);
-    }
+function ProfileBoard({last_range_multiple, refreshNReceiveMultipleCollections,
+                       addUserId, userid, addUserIdp, useridp, fetchSingleProfile, singleProfile}) {
 
     function handleChangeIds(event) {
         event.preventDefault();
         addUserId(event.target.value)
+    }
+
+    function handleChangeIdp(event) {
+        event.preventDefault();
+        addUserIdp(event.target.value)
     }
 
     return (
@@ -55,11 +48,12 @@ function ProfileBoard({deck_multiple, last_range_multiple, last_append_collectio
                                  onChange={(e) => handleChangeIds(e)}/>
                 </div>
                 <div className="col-xs-2">
-                    <FormControl className="btn-block" placeholder="IDP name" onChange={(e) => handleChangeLastRange(e)}/>
+                    <FormControl className="btn-block" placeholder="IDP name" defaultValue="esia"
+                                 onChange={(e) => handleChangeIdp(e)}/>
                 </div>
                 <div className="col-xs-2">
                     <Button className="btn btn-primary btn-block"
-                            onClick={() => fetchSingleProfile(userid)}>
+                            onClick={() => fetchSingleProfile(userid, useridp)}>
                         Fetch Profile
                     </Button>
                 </div>
@@ -69,9 +63,8 @@ function ProfileBoard({deck_multiple, last_range_multiple, last_append_collectio
                     </Button>
                 </div>
             </Navbar>
-            {/*Masonry imitation using bootstrap styles for .row .item .well*/}
             <div className="container">
-                <Profile profile={singleProfile}/>
+                {singleProfile != null ? <Profile profile={singleProfile}/> : <ProfileEmpty/>}
             </div>
         </div>
     );
@@ -82,6 +75,7 @@ const mapStateToProps = state => ({
     last_range_multiple: state.last_range_multiple_reducer,
     last_append_collection: state.last_collection_reducer,
     userid: state.userid_reducer,
+    useridp: state.useridp_reducer,
     singleProfile: state.profile_reducer,
 });
 
@@ -92,8 +86,9 @@ const mapDispatchToProps = dispatch => ({
     refreshNReceiveMultipleCollections: (colRange) => dispatch(refreshNReceiveMultipleCollections(colRange)),
 
     //new
-    fetchSingleProfile: (userid) => dispatch(fetchSingleProfile(userid)),
-    addUserId: (userid) => dispatch(addUserId(userid))
+    fetchSingleProfile: (userid, useridp) => dispatch(fetchSingleProfile(userid, useridp)),
+    addUserId: (userid) => dispatch(addUserId(userid)),
+    addUserIdp: (useridp) => dispatch(addUserIdp(useridp))
 });
 
 export default connect(

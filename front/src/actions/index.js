@@ -3,7 +3,7 @@
  */
 import * as log from 'loglevel';
 import {RECEIVE_CARDS_MULTIPLE, ADD_AMOUNT, RECEIVE_CARDS,
-    APPEND_COLLECTION, RECEIVE_CARDS_ERR, BAD_USER_ID_ERR, APPEND_USERID, RECEIVE_PROFILE, RECEIVE_PROFILE_ERR} from '../constants/ActionTypes'
+    APPEND_COLLECTION, RECEIVE_CARDS_ERR, BAD_USER_ID_ERR, APPEND_USERID, APPEND_USERIDP, RECEIVE_PROFILE, RECEIVE_PROFILE_ERR} from '../constants/ActionTypes'
 
 export const addLastRangeMultiple = last_range_multiple => ({
     type: ADD_AMOUNT,
@@ -20,11 +20,26 @@ export const addUserId = userid => ({
     userid
 });
 
-export const fetchSingleProfile = (userid) => (dispatch, getState) => {
+export const badUserIdErr = err => ({
+    type: BAD_USER_ID_ERR,
+    err: err
+});
+
+export const addUserIdp = useridp => ({
+    type: APPEND_USERIDP,
+    useridp
+});
+
+export const badUserIdp = useridp => ({
+    type: APPEND_USERIDP,
+    useridp
+});
+
+export const fetchSingleProfile = (userid, useridp) => (dispatch, getState) => {
     if (!/(\d+)/.test(userid)) {
         return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
     }
-    return fetch('http://localhost:8080/profile/' + "esia" + "/" + userid)
+    return fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
         .then((resp) => resp.json())
         .then((resp) => {
             dispatch(receiveProfile(resp))
@@ -80,10 +95,5 @@ export const receiveCards = (json) => ({
 
 export const receiveCardsErr = (err) => ({
     type: RECEIVE_CARDS_ERR,
-    err: err
-});
-
-export const badUserIdErr = (err) => ({
-    type: BAD_USER_ID_ERR,
     err: err
 });

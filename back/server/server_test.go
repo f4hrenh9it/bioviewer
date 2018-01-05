@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"time"
 	"os"
-	"io/ioutil"
 
 	"github.com/lulunevermind/bioviewer/back/util"
+	"github.com/lulunevermind/bioviewer/back/hbase"
+	"encoding/json"
 )
 
 var host = "localhost"
@@ -27,8 +28,6 @@ func TestGetProfile(t *testing.T) {
 	url := fmt.Sprintf("http://%s:%d/profile/%s/%d", host, port, idp, userid)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
-	respBody, err := ioutil.ReadAll(resp.Body)
-	util.CheckErr(err)
-	resp.Body.Close()
-	fmt.Printf("Response is %s", respBody)
+	profile := new(hbase.BioRegisterProfile)
+	json.NewDecoder(resp.Body).Decode(profile)
 }

@@ -19,12 +19,24 @@ func GetRegisterProfile(c *gin.Context) {
 	} else {
 		photos, errPhotos := hbase.GetOriginals(hbase.PHOTO, intKey)
 		sounds, errSounds := hbase.GetOriginals(hbase.SOUND, intKey)
-		profile := hbase.NewBioRegisterProfile(id, photos, sounds)
-		if errPhotos != nil && errSounds != nil{
-			logger.Slog.Infow("HERE!!!!")
-			c.JSON(200, errPhotos.Error() + "\n" + errSounds.Error())
+		profile := hbase.NewBioRegisterProfile(
+			id,
+			"Boris", // где эти данные должны лежать в hbase?
+			"Eltsin",
+			"Nikolaevitch",
+			"M",
+			56,
+			photos,
+			sounds,
+		)
+		if errPhotos != nil && errSounds != nil {
+			c.JSON(200, errPhotos.Error()+"\n"+errSounds.Error())
 		} else {
 			c.JSON(200, profile)
 		}
 	}
+}
+
+func PutRegisterMetaData(c *gin.Context) {
+
 }
