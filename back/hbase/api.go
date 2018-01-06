@@ -9,8 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	//"bytes"
-	//"encoding/binary"
+	"encoding/json"
 )
 
 // Получает внутренний ключ по внешнему и имени IDP, производя поиск в таблице IDPPREFIX+IDP
@@ -52,6 +51,11 @@ func GetOriginals(modality Modality, intKey []byte) ([]map[string]interface{}, e
 				if reflect.DeepEqual(v.Qualifier, []byte("data")) {
 					origInstance["data"] = v.Value
 					origInstance["date"] = *v.Timestamp
+				}
+				if reflect.DeepEqual(v.Qualifier, []byte("valid")) {
+					var val bool
+					json.Unmarshal(v.Value, &val)
+					origInstance["valid"] = val
 				}
 				//if reflect.DeepEqual(v.Qualifier, []byte("date")) {
 				//	buf := bytes.NewBuffer(v.Value)

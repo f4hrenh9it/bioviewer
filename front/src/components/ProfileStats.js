@@ -1,6 +1,6 @@
 import React from 'react';
 import './ProfileStats.css';
-import {Jumbotron, Badge} from 'react-bootstrap';
+import {Panel, Jumbotron, Badge} from 'react-bootstrap';
 
 export const ProfileStats = props => (
     <div>

@@ -1,13 +1,11 @@
 import React from 'react';
 import './ProfileMetaInfo.css';
-import {Jumbotron, Row, Col} from 'react-bootstrap';
+import {Jumbotron, Panel, Row, Col} from 'react-bootstrap';
 
 export const ProfileRegisterInfo = (props) => (
     <div>
-        <Jumbotron>
+        <Panel header={<h4>Данные регистрации</h4>} bsStyle={"primary"}>
             <Row className="show-grid">
-                <h3 className="text-center">Данные регистрации</h3>
-                <hr/>
                 <Col md={6}>
                     <div className="text-center"> Имя?: {props.profile.firstname}</div>
                 </Col>
@@ -27,6 +25,6 @@ export const ProfileRegisterInfo = (props) => (
                     <div className="text-center">Возраст?: {props.profile.age}</div>
                 </Col>
             </Row>
-        </Jumbotron>
+        </Panel>
     </div>
 );

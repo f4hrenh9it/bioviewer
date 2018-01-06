@@ -1,14 +1,16 @@
 import React from 'react';
-import {Carousel, Jumbotron} from 'react-bootstrap';
+import {Carousel, Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 
 export function ProfileOriginals(props) {
 
     let sounds = [];
     for (let i = 0; i < props.profile.sounds.length; i++) {
         sounds.push(
-            <audio className="text-center" controls src={"data:audio/wav;base64," + props.profile.sounds[i].data}>
-                Запись №{i}
-            </audio>
+            <ListGroupItem bsStyle={props.profile.sounds[i].valid ? 'success' : 'danger'}>
+                <audio controls src={"data:audio/wav;base64," + props.profile.sounds[i].data}>
+                    Запись №{i+1}
+                </audio>
+            </ListGroupItem>
         )
     }
 
@@ -18,19 +20,22 @@ export function ProfileOriginals(props) {
             <Carousel.Item>
                 <img src={'data:image/jpg;base64,' + props.profile.photos[i].data}/>
                 <Carousel.Caption>
-                    <h3>Дата регистрации</h3>
-                    <p>{props.profile.photos[i].date}</p>
+                    <span>{new Date(props.profile.photos[i].date).toDateString()}</span>
+                    <span> {props.profile.photos[i].valid ? '(валидный)' : '(не валидный)'}</span>
                 </Carousel.Caption>
             </Carousel.Item>
         )
     }
 
     return (
-        <Jumbotron>
+        <Panel header={<h4>Фото / аудио оригиналы</h4>} bsStyle={"primary"}>
             <Carousel>
                 {photos}
             </Carousel>
-            {sounds}
-        </Jumbotron>
+            <hr/>
+            <ListGroup>
+                {sounds}
+            </ListGroup>
+        </Panel>
     );
 }
