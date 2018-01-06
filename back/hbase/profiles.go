@@ -46,10 +46,3 @@ func NewBioRegisterProfile(
 		adaptations,
 	}
 }
-
-type BioVerifyProfile struct {
-	Name          string
-	PhotoOriginal []byte
-	SoundOriginal []byte
-	//TODO: Определить форму профиля для верификации
-}

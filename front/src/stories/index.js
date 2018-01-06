@@ -14,6 +14,7 @@ import {Profile} from '../components/Profile'
 import {ProfileRegisterInfo} from '../components/ProfileRegisterInfo';
 import {ProfileOriginals} from "../components/ProfileOriginals";
 import {ProfileStats} from "../components/ProfileStats";
+import {ProfileNavBar} from "../components/ProfileNavBar";
 
 storiesOf('Welcome', module).add('to Storybook', () => <Welcome showApp={linkTo('Button')}/>);
 
@@ -40,7 +41,9 @@ storiesOf('Блоки информации по отдельности', module)
     .add('Блок оригиналов', () =>
         <ProfileOriginals profile={profile}/>)
     .add('Блок статистики', () =>
-        <ProfileStats profile={profile}/>);
+        <ProfileStats profile={profile}/>)
+    .add('Блок навигации', () =>
+        <ProfileNavBar profile={profile}/>);
 
 storiesOf('Компоновка профиля регистрации/верификации', module)
     .add('Компоновка №1', () =>

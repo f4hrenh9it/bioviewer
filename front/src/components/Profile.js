@@ -7,14 +7,14 @@ import {Jumbotron, Row, Col} from 'react-bootstrap'
 
 export const Profile = (props) => (
     <div>
+        <Row>
+            <ProfileStats profile={props.profile}/>
+        </Row>
         <Col md={6}>
             <ProfileRegisterInfo profile={props.profile}/>
         </Col>
         <Col md={6}>
             <ProfileOriginals profile={props.profile}/>
-        </Col>
-        <Col md={6} bsClass={"clearfix"}>
-            <ProfileStats profile={props.profile}/>
         </Col>
     </div>
 );

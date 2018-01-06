@@ -9,22 +9,22 @@ export const ProfileRegisterInfo = (props) => (
                 <h3 className="text-center">Данные регистрации</h3>
                 <hr/>
                 <Col md={6}>
-                    <div className="text-center"> Имя: {props.profile.firstname}</div>
+                    <div className="text-center"> Имя?: {props.profile.firstname}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Idp идентификатор: {props.profile.idpid}</div>
+                    <div className="text-center">Idp id: {props.profile.idpid}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Фамилия: {props.profile.lastname}</div>
+                    <div className="text-center">Фамилия?: {props.profile.lastname}</div>
                 </Col>
                 <Col md={6}>
                     <div className="text-center">Пол: {props.profile.gender}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Отчество: {props.profile.secondname}</div>
+                    <div className="text-center">Отчество?: {props.profile.secondname}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Возраст: {props.profile.age}</div>
+                    <div className="text-center">Возраст?: {props.profile.age}</div>
                 </Col>
             </Row>
         </Jumbotron>
