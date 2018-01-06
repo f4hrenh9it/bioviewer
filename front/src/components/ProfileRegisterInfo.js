@@ -7,22 +7,22 @@ export const ProfileRegisterInfo = (props) => (
         <Panel header={<h4>Данные регистрации</h4>} bsStyle={"primary"}>
             <Row className="show-grid">
                 <Col md={6}>
-                    <div className="text-center"> Имя?: {props.profile.firstname}</div>
+                    <div className="text-center"> Имя?: {props.regProfile.firstname}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Idp id: {props.profile.idpid}</div>
+                    <div className="text-center">Idp id: {props.regProfile.idpid}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Фамилия?: {props.profile.lastname}</div>
+                    <div className="text-center">Фамилия?: {props.regProfile.lastname}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Пол: {props.profile.gender}</div>
+                    <div className="text-center">Пол: {props.regProfile.gender}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Отчество?: {props.profile.secondname}</div>
+                    <div className="text-center">Отчество?: {props.regProfile.secondname}</div>
                 </Col>
                 <Col md={6}>
-                    <div className="text-center">Возраст?: {props.profile.age}</div>
+                    <div className="text-center">Возраст?: {props.regProfile.age}</div>
                 </Col>
             </Row>
         </Panel>

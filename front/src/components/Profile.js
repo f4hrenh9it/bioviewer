@@ -8,13 +8,13 @@ import {Jumbotron, Row, Col} from 'react-bootstrap'
 export const Profile = (props) => (
     <div>
         <Row>
-            <ProfileStats profile={props.profile}/>
+            <ProfileStats regProfile={props.regProfile}/>
         </Row>
         <Col md={6}>
-            <ProfileRegisterInfo profile={props.profile}/>
+            <ProfileRegisterInfo regProfile={props.regProfile}/>
         </Col>
         <Col md={6}>
-            <ProfileOriginals profile={props.profile}/>
+            <ProfileOriginals regProfile={props.regProfile}/>
         </Col>
     </div>
 );

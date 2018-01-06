@@ -3,7 +3,7 @@
  */
 import {APPEND_USERIDP} from '../constants/ActionTypes'
 
-export const useridp_reducer = (state = 0, action) => {
+export const useridp_reducer = (state = "esia", action) => {
     switch (action.type) {
         case APPEND_USERIDP:
             return action.useridp;

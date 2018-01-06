@@ -3,7 +3,7 @@
  */
 import {APPEND_USERID} from '../constants/ActionTypes'
 
-export const userid_reducer = (state = 0, action) => {
+export const userid_reducer = (state = 240631324, action) => {
     switch (action.type) {
         case APPEND_USERID:
             return action.userid;

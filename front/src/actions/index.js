@@ -1,4 +1,5 @@
-import {BAD_USER_ID_ERR, APPEND_USERID, APPEND_USERIDP, RECEIVE_PROFILE, RECEIVE_PROFILE_ERR} from '../constants/ActionTypes'
+import {BAD_USER_ID_ERR, APPEND_USERID
+    , APPEND_USERIDP, RECEIVE_PROFILE, RECEIVE_PROFILE_ERR, RECEIVE_REG_INFO, RECEIVE_VER_INFO} from '../constants/ActionTypes'
 
 export const addUserId = userid => ({
     type: APPEND_USERID,
@@ -40,4 +41,38 @@ export const receiveProfile = (jsonProfile) => ({
 export const receiveProfileErr = (err) => ({
     type: RECEIVE_PROFILE_ERR,
     err: err
+});
+
+
+// New async fetch api
+
+export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState) => {
+    if (!/(\d+)/.test(userid)) {
+        return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
+    }
+
+    await Promise.all([
+        fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
+            .then((resp) => resp.json())
+            .then((resp) => {
+                dispatch(receiveRegisterInfo(resp))
+            })
+            .catch((err) => dispatch(receiveProfileErr(err))),
+        fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
+            .then((resp) => resp.json())
+            .then((resp) => {
+                dispatch(receiveVerifyInfo(resp))
+            })
+            .catch((err) => dispatch(receiveProfileErr(err)))
+    ]);
+};
+
+export const receiveRegisterInfo = (profile) => ({
+    type: RECEIVE_REG_INFO,
+    regProfile: profile
+});
+
+export const receiveVerifyInfo = (profile) => ({
+    type: RECEIVE_VER_INFO,
+    verProfile: profile
 });

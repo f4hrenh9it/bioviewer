@@ -1,10 +1,10 @@
 import React from 'react';
 import {Button, FormControl, Navbar} from 'react-bootstrap';
-import {addUserId, addUserIdp, fetchSingleProfile} from "../actions/index";
+import {addUserId, addUserIdp, fetchSingleProfile, fetchUpdateProfile} from "../actions/index";
 import {connect} from "react-redux";
 import './ProfileNavBar.css';
 
-export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchSingleProfile}) {
+export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchSingleProfile, fetchUpdateProfile}) {
 
     function handleChangeIds(event) {
         event.preventDefault();
@@ -29,7 +29,7 @@ export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchSing
             </div>
             <div className="col-xs-2">
                 <Button className="btn btn-primary btn-block"
-                        onClick={() => fetchSingleProfile(userid, useridp)}>
+                        onClick={() => fetchUpdateProfile(userid, useridp)}>
                     Fetch Profile
                 </Button>
             </div>
@@ -50,6 +50,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     fetchSingleProfile: (userid, useridp) => dispatch(fetchSingleProfile(userid, useridp)),
+    fetchUpdateProfile: (userid, useridp) => dispatch(fetchUpdateProfile(userid, useridp)),
     addUserId: (userid) => dispatch(addUserId(userid)),
     addUserIdp: (useridp) => dispatch(addUserIdp(useridp))
 });
