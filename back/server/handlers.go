@@ -17,7 +17,7 @@ func GetRegisterProfile(c *gin.Context) {
 		// пользователь не зарегистрирован в idp
 		c.JSON(200, err.Error())
 	} else {
-		photos, errPhotos := hbase.GetOriginals(hbase.PHOTO, intKey)
+		photos, errPhotos := hbase.GetOriginals(hbase.PHOTO, intKey) // Начать продумывать разделение по routes
 		sounds, errSounds := hbase.GetOriginals(hbase.SOUND, intKey)
 		profile := hbase.NewBioRegisterProfile(
 			id,
@@ -26,8 +26,13 @@ func GetRegisterProfile(c *gin.Context) {
 			"Nikolaevitch",
 			"M",
 			56,
+			len(photos), // на самом деле должно храниться отдельно ибо подсчитывать каждый раз возможно не
+			len(sounds), // выйдет без сканов или может быть нетривиальным
 			photos,
 			sounds,
+			20, // где взять?
+			15,
+			0,
 		)
 		if errPhotos != nil && errSounds != nil {
 			c.JSON(200, errPhotos.Error()+"\n"+errSounds.Error())

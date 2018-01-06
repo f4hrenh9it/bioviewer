@@ -1,10 +1,22 @@
 import React from 'react';
 import './Profile.css';
 import {ProfileRegisterInfo} from "./ProfileRegisterInfo";
-import {Jumbotron} from 'react-bootstrap'
+import {ProfileOriginals} from "./ProfileOriginals";
+import {ProfileStats} from "./ProfileStats";
+import {Jumbotron, Row, Col} from 'react-bootstrap'
 
 export const Profile = (props) => (
-    <ProfileRegisterInfo profile={props.profile}/>
+    <div>
+        <Col md={6}>
+            <ProfileRegisterInfo profile={props.profile}/>
+        </Col>
+        <Col md={6}>
+            <ProfileOriginals profile={props.profile}/>
+        </Col>
+        <Col md={6} bsClass={"clearfix"}>
+            <ProfileStats profile={props.profile}/>
+        </Col>
+    </div>
 );
 
 export const ProfileEmpty = () => (

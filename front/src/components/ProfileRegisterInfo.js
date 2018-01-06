@@ -8,23 +8,23 @@ export const ProfileRegisterInfo = (props) => (
             <Row className="show-grid">
                 <h3 className="text-center">Данные регистрации</h3>
                 <hr/>
-                <Col md={6} mdPush={6}>
-                    <p className="text-center">Имя: {props.profile.firstname}</p>
+                <Col md={6}>
+                    <div className="text-center"> Имя: {props.profile.firstname}</div>
                 </Col>
-                <Col md={6} mdPull={6}>
-                    <p className="text-center">Idp идентификатор: {props.profile.idpid}</p>
+                <Col md={6}>
+                    <div className="text-center">Idp идентификатор: {props.profile.idpid}</div>
                 </Col>
-                <Col md={6} mdPush={6}>
-                    <p className="text-center">Фамилия: {props.profile.lastname}</p>
+                <Col md={6}>
+                    <div className="text-center">Фамилия: {props.profile.lastname}</div>
                 </Col>
-                <Col md={6} mdPull={6}>
-                    <p className="text-center">Пол: {props.profile.gender}</p>
+                <Col md={6}>
+                    <div className="text-center">Пол: {props.profile.gender}</div>
                 </Col>
-                <Col md={6} mdPush={6}>
-                    <p className="text-center">Отчество: {props.profile.secondname}</p>
+                <Col md={6}>
+                    <div className="text-center">Отчество: {props.profile.secondname}</div>
                 </Col>
-                <Col md={6} mdPull={6}>
-                    <p className="text-center">Возраст: {props.profile.age}</p>
+                <Col md={6}>
+                    <div className="text-center">Возраст: {props.profile.age}</div>
                 </Col>
             </Row>
         </Jumbotron>
