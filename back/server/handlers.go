@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lulunevermind/bioviewer/back/hbase"
 	"github.com/lulunevermind/bioviewer/back/logger"
+	//"io/ioutil"
 )
 
 func GetRegisterProfile(c *gin.Context) {
@@ -19,6 +20,7 @@ func GetRegisterProfile(c *gin.Context) {
 	} else {
 		photos, errPhotos := hbase.GetOriginals(hbase.PHOTO, intKey) // Начать продумывать разделение по routes
 		sounds, errSounds := hbase.GetOriginals(hbase.SOUND, intKey)
+		//ioutil.WriteFile("soundtest", sounds[0], 0644)
 		profile := hbase.NewBioRegisterProfile(
 			id,
 			"Boris", // где эти данные должны лежать в hbase?

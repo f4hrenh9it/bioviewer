@@ -9,8 +9,8 @@ type BioRegisterProfile struct {
 	Age            int      `json:"age"`
 	PhotosAmount   int      `json:"photos_amount"`
 	SoundsAmount   int      `json:"sounds_amount"`
-	PhotoOriginals [][]byte `json:"photos"`
-	SoundOriginals [][]byte `json:"sounds"`
+	PhotoOriginals []map[string]interface{} `json:"photos"`
+	SoundOriginals []map[string]interface{} `json:"sounds"`
 	VerifiesAmount int `json:"verifies_amount"`
 	VerifiesConfirmed int `json:"verifies_confirmed"`
 	Adaptations int `json:"adaptations"`
@@ -24,8 +24,8 @@ func NewBioRegisterProfile(
 	gender string, age int,
 	photosAmount int,
 	soundsAmount int,
-	photos [][]byte,
-	sounds [][]byte,
+	photos []map[string]interface{},
+	sounds []map[string]interface{},
 	verifiesAmount int,
 	verifiesConfirmed int,
 	adaptations int,

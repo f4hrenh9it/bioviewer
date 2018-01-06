@@ -15,7 +15,8 @@ import (
 var host = "localhost"
 var port = 8080
 var idp = "esia"
-var userid = 240631324
+var userid = 1000349572
+//var userid = 240631324
 
 func TestMain(m *testing.M) {
 	r := GetRouter()

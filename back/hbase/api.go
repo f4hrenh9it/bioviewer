@@ -8,6 +8,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
+	//"bytes"
+	//"encoding/binary"
 )
 
 // Получает внутренний ключ по внешнему и имени IDP, производя поиск в таблице IDPPREFIX+IDP
@@ -27,7 +30,7 @@ func GetInternalKey(idp string, userid string) ([]byte, error) {
 }
 
 // Получает все оригиналы по заданной модальности
-func GetOriginals(modality Modality, intKey []byte) ([][]byte, error) {
+func GetOriginals(modality Modality, intKey []byte) ([]map[string]interface{}, error) {
 	logger.Slog.Infow("Получаем оригинал для модальности",
 		"modality", modality.String(), "table", ORIGINALPREFIX+modality.String(),
 		"intKey", intKey)
@@ -40,10 +43,33 @@ func GetOriginals(modality Modality, intKey []byte) ([][]byte, error) {
 	scanRsp := client.Scan(getRequest)
 	util.CheckErr(err)
 
-	var originals [][]byte
+
+	originals := []map[string]interface{}{}
 	for {
 		if orig, err := scanRsp.Next(); err == nil {
-			originals = append(originals, orig.Cells[0].Value)
+			origInstance := map[string]interface{}{}
+			for _, v := range orig.Cells {
+				if reflect.DeepEqual(v.Qualifier, []byte("data")) {
+					origInstance["data"] = v.Value
+					origInstance["date"] = *v.Timestamp
+				}
+				//if reflect.DeepEqual(v.Qualifier, []byte("date")) {
+				//	buf := bytes.NewBuffer(v.Value)
+				//	ts, err := binary.ReadVarint(buf)
+				//	util.CheckErr(err)
+				//	origInstance["date"] = ts
+				//}
+				//if k > 0 {
+				//	fmt.Printf("========\n")
+				//	fmt.Printf("rowKey = %s\n", v.Row)
+				//	fmt.Printf("value = %s\n", v.Value)
+				//	fmt.Printf("cf:qualifier = %s:%s\n", v.Family, v.Qualifier)
+				//	fmt.Printf("ts = %d\n", *v.Timestamp)
+				//	fmt.Printf("celltype = %s\n", *v.CellType)
+				//	fmt.Printf("========\n")
+				//}
+			}
+			originals = append(originals, origInstance)
 		} else {
 			break
 		}
