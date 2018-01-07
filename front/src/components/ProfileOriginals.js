@@ -2,7 +2,6 @@ import React from 'react';
 import {Carousel, Panel, ListGroup, ListGroupItem} from 'react-bootstrap';
 
 export function ProfileOriginals(props) {
-    console.log("RegProfile = " + props.regProfile);
 
     let sounds = [];
     for (let i = 0; i < props.regProfile.sounds.length; i++) {

@@ -16,3 +16,31 @@ hr {
     background-color: #222222;
     height: 1px !important;
 }
+
+/*animations*/
+
+/*slow appearance*/
+.anim-appear {
+    opacity: 0.01;
+}
+
+.anim-appear.anim-appear-active{
+    opacity: 2;
+    transition: opacity 3s ease-in;
+}
+
+/*blinking*/
+.blink {
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+@-webkit-keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}

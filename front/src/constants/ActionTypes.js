@@ -7,3 +7,4 @@ export const RECEIVE_PROFILE_ERR = 'RECEIVE_PROFILE_ERR';
 // New api
 export const RECEIVE_REG_INFO = 'RECEIVE_REG_INFO';
 export const RECEIVE_VER_INFO = 'RECEIVE_VER_INFO';
+export const APP_LOADING = 'APP_LOADING';

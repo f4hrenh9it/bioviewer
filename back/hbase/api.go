@@ -19,13 +19,14 @@ func GetInternalKey(idp string, userid string) ([]byte, error) {
 	getRequest, err := hrpc.NewGetStr(context.Background(), IDPPREFIX+idp, userid, hrpc.Families(family))
 	util.CheckErr(err)
 	getRsp, err := client.Get(getRequest)
-	if len(getRsp.Cells) == 0 {
+	if err != nil {
+		return nil, errors.New("ошибка при выполнении запроса к hbase")
+	}
+	if len(getRsp.Cells) > 0 {
+		return getRsp.Cells[0].Value, nil
+	} else {
 		return nil, errors.New("пользователь не зарегистрирован в idp")
 	}
-	if len(getRsp.Cells) > 1 {
-		return nil, errors.New("несколько внутненних ключей на один внешний")
-	}
-	return getRsp.Cells[0].Value, nil
 }
 
 // Получает все оригиналы по заданной модальности
@@ -57,21 +58,6 @@ func GetOriginals(modality Modality, intKey []byte) ([]map[string]interface{}, e
 					json.Unmarshal(v.Value, &val)
 					origInstance["valid"] = val
 				}
-				//if reflect.DeepEqual(v.Qualifier, []byte("date")) {
-				//	buf := bytes.NewBuffer(v.Value)
-				//	ts, err := binary.ReadVarint(buf)
-				//	util.CheckErr(err)
-				//	origInstance["date"] = ts
-				//}
-				//if k > 0 {
-				//	fmt.Printf("========\n")
-				//	fmt.Printf("rowKey = %s\n", v.Row)
-				//	fmt.Printf("value = %s\n", v.Value)
-				//	fmt.Printf("cf:qualifier = %s:%s\n", v.Family, v.Qualifier)
-				//	fmt.Printf("ts = %d\n", *v.Timestamp)
-				//	fmt.Printf("celltype = %s\n", *v.CellType)
-				//	fmt.Printf("========\n")
-				//}
 			}
 			originals = append(originals, origInstance)
 		} else {

@@ -1,5 +1,5 @@
 import {BAD_USER_ID_ERR, APPEND_USERID
-    , APPEND_USERIDP, RECEIVE_PROFILE, RECEIVE_PROFILE_ERR, RECEIVE_REG_INFO, RECEIVE_VER_INFO} from '../constants/ActionTypes'
+    , APPEND_USERIDP, RECEIVE_PROFILE, RECEIVE_PROFILE_ERR, RECEIVE_REG_INFO, RECEIVE_VER_INFO, APP_LOADING} from '../constants/ActionTypes'
 
 export const addUserId = userid => ({
     type: APPEND_USERID,
@@ -16,7 +16,7 @@ export const addUserIdp = useridp => ({
     useridp
 });
 
-export const badUserIdp = useridp => ({
+export const badUserIdpErr = useridp => ({
     type: APPEND_USERIDP,
     useridp
 });
@@ -51,6 +51,7 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
         return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
     }
 
+    dispatch(appLoading(1));
     await Promise.all([
         fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
             .then((resp) => resp.json())
@@ -65,7 +66,13 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
             })
             .catch((err) => dispatch(receiveProfileErr(err)))
     ]);
+    dispatch(appLoading(0));
 };
+
+export const appLoading = (loading) => ({
+    type: APP_LOADING,
+    loading: loading
+});
 
 export const receiveRegisterInfo = (profile) => ({
     type: RECEIVE_REG_INFO,

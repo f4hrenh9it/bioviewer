@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, FormControl, Navbar} from 'react-bootstrap';
+import {Button, FormControl, Glyphicon, Label, Navbar} from 'react-bootstrap';
 import {addUserId, addUserIdp, fetchSingleProfile, fetchUpdateProfile} from "../actions/index";
 import {connect} from "react-redux";
 import './ProfileNavBar.css';
@@ -24,18 +24,23 @@ export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchSing
                              onChange={(e) => handleChangeIds(e)}/>
             </div>
             <div className="col-xs-2">
-                <FormControl className="btn-block" placeholder="IDP name" defaultValue="esia"
+                <FormControl className="btn-block" placeholder="IDP мнемоника" defaultValue="esia"
                              onChange={(e) => handleChangeIdp(e)}/>
             </div>
             <div className="col-xs-2">
                 <Button className="btn btn-primary btn-block"
                         onClick={() => fetchUpdateProfile(userid, useridp)}>
-                    Fetch Profile
+                    <Glyphicon glyph="search"/>&nbsp;Профиль
                 </Button>
             </div>
             <div className="col-xs-2">
-                <Button className="btn btn-danger btn-block">
-                    Fetch multiple
+                <Button className="btn btn-primary btn-block">
+                    <Glyphicon glyph="stats"/>&nbsp;Статистика
+                </Button>
+            </div>
+            <div className="col-xs-2">
+                <Button className="btn btn-success btn-block">
+                    <Glyphicon glyph="cog"/>&nbsp;Настройки
                 </Button>
             </div>
         </Navbar>
