@@ -1,10 +1,10 @@
 import React from 'react';
-import {Button, FormControl, Glyphicon, Label, Navbar} from 'react-bootstrap';
+import {Button, FormControl, Glyphicon, Navbar} from 'react-bootstrap';
 import {addUserId, addUserIdp, fetchSingleProfile, fetchUpdateProfile} from "../actions/index";
 import {connect} from "react-redux";
 import './ProfileNavBar.css';
 
-export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchSingleProfile, fetchUpdateProfile}) {
+export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchUpdateProfile}) {
 
     function handleChangeIds(event) {
         event.preventDefault();

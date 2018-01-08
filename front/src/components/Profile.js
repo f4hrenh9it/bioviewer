@@ -4,9 +4,7 @@ import {ProfileRegisterInfo} from "./ProfileRegisterInfo";
 import {ProfileOriginals} from "./ProfileOriginals";
 import {ProfileStats} from "./ProfileStats";
 import {ProfileError} from "./ProfileError";
-import {Jumbotron, Row, Col} from 'react-bootstrap'
-
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import {Row, Col} from 'react-bootstrap'
 
 export const Profile = (props) => (
     <div>
@@ -24,12 +22,4 @@ export const Profile = (props) => (
         </div>
         }
     </div>
-);
-
-export const ProfileEmpty = () => (
-    <Jumbotron>
-        <ReactCSSTransitionGroup transitionName="anim" transitionAppear={true} transitionAppearTimeout={3000} transitionEnter={true} transitionLeave={true}>
-            <h4 className="text-center">Нет данных</h4>
-        </ReactCSSTransitionGroup>
-    </Jumbotron>
 );

@@ -5,7 +5,7 @@ export const ProfileError = props => (
     <div>
         <Jumbotron>
             <p className="text-center">
-                <Glyphicon glyph="error" className="blink"/>&nbsp;Ошибка: {props.error}
+                <Glyphicon glyph="remove"/>&nbsp;Ошибка: {props.error}
             </p>
         </Jumbotron>
     </div>
