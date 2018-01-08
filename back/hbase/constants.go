@@ -1,5 +1,11 @@
 package hbase
 
+var KEYCF map[string][]string
+
+func init() {
+	KEYCF = map[string][]string{"meta": {"id"}}
+}
+
 // Енум модальностей
 type Modality int
 

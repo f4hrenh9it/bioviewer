@@ -15,12 +15,15 @@ import (
 // Получает внутренний ключ по внешнему и имени IDP, производя поиск в таблице IDPPREFIX+IDP
 func GetInternalKey(idp string, userid string) ([]byte, error) {
 	logger.Slog.Infow("Получаем внутренний ключ по idp и userid", "idp", idp, "userid", userid)
-	family := map[string][]string{"meta": {"id"}}
-	getRequest, err := hrpc.NewGetStr(context.Background(), IDPPREFIX+idp, userid, hrpc.Families(family))
+	getRequest, err := hrpc.NewGetStr(context.Background(), IDPPREFIX+idp, userid, hrpc.Families(KEYCF))
 	util.CheckErr(err)
 	getRsp, err := client.Get(getRequest)
 	if err != nil {
-		return nil, errors.New("ошибка при выполнении запроса к hbase")
+		if err.Error() == "table not found" {
+			return nil, errors.New("таблица idp не найдена в базе")
+		} else {
+			return nil, err
+		}
 	}
 	if len(getRsp.Cells) > 0 {
 		return getRsp.Cells[0].Value, nil
