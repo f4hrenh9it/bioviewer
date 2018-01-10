@@ -33,19 +33,21 @@ func GetInternalKey(idp string, userid string) ([]byte, error) {
 }
 
 // Получает все оригиналы по заданной модальности
-func GetOriginals(modality Modality, intKey []byte) ([]map[string]interface{}, error) {
+func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture) {
+
 	logger.Slog.Infow("Получаем оригинал для модальности",
 		"modality", modality.String(), "table", ORIGINALPREFIX+modality.String(),
 		"intKey", intKey)
-	pFilter := filter.NewPrefixFilter(intKey)
 
+	pFilter := filter.NewPrefixFilter(intKey)
+	femilies := map[string][]string{"modality": {"data", "valid"}}
 	getRequest, err := hrpc.NewScanStr(context.Background(),
 		ORIGINALPREFIX+modality.String(),
-		hrpc.Filters(pFilter))
-	util.CheckErr(err)
-	scanRsp := client.Scan(getRequest)
+		hrpc.Filters(pFilter), hrpc.Families(femilies))
 	util.CheckErr(err)
 
+	scanRsp := client.Scan(getRequest)
+	util.CheckErr(err)
 
 	originals := []map[string]interface{}{}
 	for {
@@ -68,9 +70,9 @@ func GetOriginals(modality Modality, intKey []byte) ([]map[string]interface{}, e
 		}
 	}
 	if len(originals) == 0 {
-		return originals, errors.New("нет оригиналов")
+		future <- NewOriginalsFuture(originals, errors.New("нет оригиналов"))
 	} else {
-		return originals, nil
+		future <- NewOriginalsFuture(originals, nil)
 	}
 }
 

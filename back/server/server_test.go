@@ -32,8 +32,8 @@ func TestGetRegProfile(t *testing.T) {
 	util.CheckErr(err)
 	profile := new(hbase.BioRegisterProfile)
 	json.NewDecoder(resp.Body).Decode(profile)
-	assert.Equal(t, 4, len(profile.PhotoOriginals))
-	assert.Equal(t, 5, len(profile.SoundOriginals))
+	assert.Equal(t, 4, len(profile.PhotoOriginals.Originals))
+	assert.Equal(t, 5, len(profile.SoundOriginals.Originals))
 	assert.Equal(t, "", profile.Error)
 }
 

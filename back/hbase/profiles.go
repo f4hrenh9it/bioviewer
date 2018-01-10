@@ -1,5 +1,14 @@
 package hbase
 
+type OriginalsFuture struct {
+	Originals []map[string]interface{} `json:"originals"`
+	Error error `json:"error"`
+}
+
+func NewOriginalsFuture(originals []map[string]interface{}, err error) *OriginalsFuture {
+	return &OriginalsFuture{originals, err}
+}
+
 type BioRegisterProfile struct {
 	IdpId          string   `json:"idpid"`
 	FirstName      string   `json:"firstname"`
@@ -9,8 +18,8 @@ type BioRegisterProfile struct {
 	Age            int      `json:"age"`
 	PhotosAmount   int      `json:"photos_amount"`
 	SoundsAmount   int      `json:"sounds_amount"`
-	PhotoOriginals []map[string]interface{} `json:"photos"`
-	SoundOriginals []map[string]interface{} `json:"sounds"`
+	PhotoOriginals OriginalsFuture `json:"photoOriginals"`
+	SoundOriginals OriginalsFuture `json:"soundOriginals"`
 	VerifiesAmount int `json:"verifies_amount"`
 	VerifiesConfirmed int `json:"verifies_confirmed"`
 	Adaptations int `json:"adaptations"`
@@ -65,15 +74,15 @@ func OptionSoundsAmount(soundsAmount int) func(*BioRegisterProfile) {
 	}
 }
 
-func OptionPhotoOriginals(photoOriginals []map[string]interface{}) func(*BioRegisterProfile) {
+func OptionPhotoOriginals(photoOriginals *OriginalsFuture) func(*BioRegisterProfile) {
 	return func(p *BioRegisterProfile) {
-		p.PhotoOriginals = photoOriginals
+		p.PhotoOriginals = *photoOriginals
 	}
 }
 
-func OptionSoundOriginals(soundOriginals []map[string]interface{}) func(*BioRegisterProfile) {
+func OptionSoundOriginals(soundOriginals *OriginalsFuture) func(*BioRegisterProfile) {
 	return func(p *BioRegisterProfile) {
-		p.SoundOriginals = soundOriginals
+		p.SoundOriginals = *soundOriginals
 	}
 }
 
@@ -108,36 +117,3 @@ func NewBioRegisterProfile(opts ...func(*BioRegisterProfile)) *BioRegisterProfil
 	}
 	return p
 }
-
-//func NewBioRegisterProfile(
-//	idpId string,
-//	firstName string,
-//	lastName string,
-//	secondName string,
-//	gender string, age int,
-//	photosAmount int,
-//	soundsAmount int,
-//	photos []map[string]interface{},
-//	sounds []map[string]interface{},
-//	verifiesAmount int,
-//	verifiesConfirmed int,
-//	adaptations int,
-//	err error,
-//	) *BioRegisterProfile {
-//	return &BioRegisterProfile{
-//		idpId,
-//		firstName,
-//		lastName,
-//		secondName,
-//		gender,
-//		age,
-//		photosAmount,
-//		soundsAmount,
-//		photos,
-//		sounds,
-//		verifiesAmount,
-//		verifiesConfirmed,
-//		adaptations,
-//		err,
-//	}
-//}

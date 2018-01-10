@@ -19,28 +19,29 @@ func GetRegisterProfile(c *gin.Context) {
 		profile := hbase.NewBioRegisterProfile(hbase.OptionErrorString(err.Error()))
 		c.JSON(200, profile)
 	} else {
-		photos, errPhotos := hbase.GetOriginals(hbase.PHOTO, intKey) // Начать продумывать разделение по routes
-		sounds, errSounds := hbase.GetOriginals(hbase.SOUND, intKey)
-		if errPhotos != nil && errSounds != nil {
-			c.JSON(200, errPhotos.Error()+"\n"+errSounds.Error())
-		} else {
-			profile := hbase.NewBioRegisterProfile(
-				hbase.OptionIdpId(id),
-				hbase.OptionFirstName("Boris"), // где эти данные должны лежать в hbase?
-				hbase.OptionLastName("Eltsin"),
-				hbase.OptionSecondName("Nikolaevitch"),
-				hbase.OptionGender("M"),
-				hbase.OptionAge(56),
-				hbase.OptionPhotosAmount(len(photos)), // на самом деле должно храниться отдельно ибо подсчитывать каждый раз возможно не
-				hbase.OptionSoundsAmount(len(sounds)), // выйдет без сканов или может быть нетривиальным
-				hbase.OptionPhotoOriginals(photos),
-				hbase.OptionSoundOriginals(sounds),
-				hbase.OptionVerifiesAmount(20), // где взять?
-				hbase.OptionVerifiesConfirmed(15),
-				hbase.OptionAdaptations(0),
-			)
-			c.JSON(200, profile)
-		}
+		photosFuture := make(chan *hbase.OriginalsFuture)
+		soundsFuture := make(chan *hbase.OriginalsFuture)
+		go hbase.GetOriginals(hbase.PHOTO, intKey, photosFuture) // Начать продумывать разделение по routes
+		go hbase.GetOriginals(hbase.SOUND, intKey, soundsFuture)
+		photos := <-photosFuture
+		sounds := <-soundsFuture
+
+		profile := hbase.NewBioRegisterProfile(
+			hbase.OptionIdpId(id),
+			hbase.OptionFirstName("Boris"), // где эти данные должны лежать в hbase?
+			hbase.OptionLastName("Eltsin"),
+			hbase.OptionSecondName("Nikolaevitch"),
+			hbase.OptionGender("M"),
+			hbase.OptionAge(56),
+			hbase.OptionPhotosAmount(len(photos.Originals)), // на самом деле должно храниться отдельно ибо подсчитывать каждый раз возможно не
+			hbase.OptionSoundsAmount(len(sounds.Originals)), // выйдет без сканов или может быть нетривиальным
+			hbase.OptionPhotoOriginals(photos),
+			hbase.OptionSoundOriginals(sounds),
+			hbase.OptionVerifiesAmount(20), // где взять?
+			hbase.OptionVerifiesConfirmed(15),
+			hbase.OptionAdaptations(0),
+		)
+		c.JSON(200, profile)
 	}
 }
 

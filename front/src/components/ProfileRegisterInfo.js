@@ -1,10 +1,10 @@
 import React from 'react';
 import './ProfileMetaInfo.css';
-import {Jumbotron, Panel, Row, Col} from 'react-bootstrap';
+import {Panel, Row, Col, Glyphicon} from 'react-bootstrap';
 
 export const ProfileRegisterInfo = (props) => (
     <div>
-        <Panel header={<h4>Данные регистрации</h4>} bsStyle={"primary"}>
+        <Panel header={<h4 className="text-center"><Glyphicon glyph={"info-sign"}/></h4>} bsStyle={"primary"}>
             <Row className="show-grid">
                 <Col md={6}>
                     <div className="text-center"> Имя?: {props.regProfile.firstname}</div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Carousel, ListGroup, ListGroupItem, Panel} from 'react-bootstrap';
+import {Carousel, ListGroup, ListGroupItem, Panel, Glyphicon} from 'react-bootstrap';
 
 const SoundItem = (props) => (
     <ListGroupItem bsStyle={props.value.valid ? 'success' : 'danger'}>
@@ -20,15 +20,15 @@ const PhotoItem = (props) => (
 );
 
 export const ProfileOriginals = props => (
-    <Panel header={<h4>Фото / аудио оригиналы</h4>} bsStyle={"primary"}>
+    <Panel header={<h4 className="text-center"><Glyphicon glyph={"user"}/></h4>} bsStyle={"primary"}>
         <Carousel>
-            {props.regProfile.photos.map((val, idx) => (
+            {props.regProfile.photoOriginals.originals.map((val, idx) => (
                 <PhotoItem key={idx} index={idx} value={val}/>
             ))}
         </Carousel>
         <hr/>
         <ListGroup>
-            {props.regProfile.sounds.map((val, idx) => (
+            {props.regProfile.soundOriginals.originals.map((val, idx) => (
                 <SoundItem key={idx} index={idx} value={val}/>
             ))}
         </ListGroup>

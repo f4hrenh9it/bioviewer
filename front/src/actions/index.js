@@ -59,12 +59,12 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
                 dispatch(receiveRegisterInfo(resp))
             })
             .catch((err) => dispatch(receiveProfileErr(err))),
-        fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
-            .then((resp) => resp.json())
-            .then((resp) => {
-                dispatch(receiveVerifyInfo(resp))
-            })
-            .catch((err) => dispatch(receiveProfileErr(err)))
+        // fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
+        //     .then((resp) => resp.json())
+        //     .then((resp) => {
+        //         dispatch(receiveVerifyInfo(resp))
+        //     })
+        //     .catch((err) => dispatch(receiveProfileErr(err)))
     ]);
     dispatch(appLoading(0));
 };
