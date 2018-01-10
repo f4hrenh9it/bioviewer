@@ -26,6 +26,24 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
+func TestGetOriginalsRows(t *testing.T) {
+	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%d", host, port, idp, userid)
+	resp, err := http.Get(url)
+	util.CheckErr(err)
+	rows := &[]string{}
+	json.NewDecoder(resp.Body).Decode(rows)
+	assert.Equal(t, 4, len(*rows))
+}
+
+func TestGetCountOriginals(t *testing.T) {
+	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%d", host, port, idp, userid)
+	resp, err := http.Get(url)
+	util.CheckErr(err)
+	rows := &[]string{}
+	json.NewDecoder(resp.Body).Decode(rows)
+	assert.Equal(t, 4, len(*rows))
+}
+
 func TestGetRegProfile(t *testing.T) {
 	url := fmt.Sprintf("http://%s:%d/profile/%s/%d", host, port, idp, userid)
 	resp, err := http.Get(url)

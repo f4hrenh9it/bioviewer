@@ -32,6 +32,7 @@ func GetRouter(opts ...func(*gin.Engine)) *gin.Engine {
 	v1 := r.Group("/")
 	{
 		v1.GET("/profile/:idp/:id", GetRegisterProfile)
+		v1.GET("/originals/rows/:idp/:id", GetOriginalsRows)
 	}
 
 	return r

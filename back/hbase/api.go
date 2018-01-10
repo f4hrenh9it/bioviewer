@@ -32,21 +32,71 @@ func GetInternalKey(idp string, userid string) ([]byte, error) {
 	}
 }
 
-// Получает все оригиналы по заданной модальности
-func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture) {
-
-	logger.Slog.Infow("Получаем оригинал для модальности",
+// Получает ключи оригиналов по внутреннему ключу
+func GetOriginalRows(modality Modality, intKey []byte) [][]byte {
+	logger.Slog.Infow("Получаем список ключей оригиналов при помощи скана без поднятия CF",
 		"modality", modality.String(), "table", ORIGINALPREFIX+modality.String(),
 		"intKey", intKey)
 
 	pFilter := filter.NewPrefixFilter(intKey)
+	keyOnlyFilter := filter.NewKeyOnlyFilter(false)
+	filterList := filter.NewList(1, pFilter, keyOnlyFilter)
+	scanRequest, err := hrpc.NewScanStr(context.Background(),
+		ORIGINALPREFIX+modality.String(),
+		hrpc.Filters(filterList))
+	util.CheckErr(err)
+
+	scanRsp := client.Scan(scanRequest)
+	util.CheckErr(err)
+	keys := [][]byte{}
+	for {
+		if orig, err := scanRsp.Next(); err == nil {
+			keys = append(keys, orig.Cells[0].Row)
+		} else {
+			break
+		}
+	}
+	return keys
+}
+
+func GetOriginal(modality Modality, intKey []byte) map[string]interface{} {
+	logger.Slog.Infow("Получаем оригинал по ключу",
+		"modality", modality.String(), "table", ORIGINALPREFIX+modality.String(),
+		"intKey", intKey)
+	getReq, err := hrpc.NewGetStr(context.Background(), ORIGINALPREFIX+modality.String(), string(intKey))
+	util.CheckErr(err)
+	getRsp, err := client.Get(getReq)
+
+	original := map[string]interface{}{}
+	for _, v := range getRsp.Cells {
+		if reflect.DeepEqual(v.Qualifier, []byte("data")) {
+			original["data"] = v.Value
+			original["date"] = *v.Timestamp
+		}
+		if reflect.DeepEqual(v.Qualifier, []byte("valid")) {
+			var val bool
+			json.Unmarshal(v.Value, &val)
+			original["valid"] = val
+		}
+	}
+	return original
+}
+
+// Получает все оригиналы по заданной модальности
+func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture) {
+	logger.Slog.Infow("Получаем оригиналы для модальности",
+		"modality", modality.String(), "table", ORIGINALPREFIX+modality.String(),
+		"intKey", intKey)
+
+	pFilter := filter.NewPrefixFilter(intKey)
+	//keyOnlyFilter := filter.NewKeyOnlyFilter(false)
 	femilies := map[string][]string{"modality": {"data", "valid"}}
-	getRequest, err := hrpc.NewScanStr(context.Background(),
+	scanRequest, err := hrpc.NewScanStr(context.Background(),
 		ORIGINALPREFIX+modality.String(),
 		hrpc.Filters(pFilter), hrpc.Families(femilies))
 	util.CheckErr(err)
 
-	scanRsp := client.Scan(getRequest)
+	scanRsp := client.Scan(scanRequest)
 	util.CheckErr(err)
 
 	originals := []map[string]interface{}{}

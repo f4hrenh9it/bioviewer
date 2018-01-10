@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/lulunevermind/bioviewer/back/hbase"
 	"github.com/lulunevermind/bioviewer/back/logger"
-	//"io/ioutil"
+	"github.com/lulunevermind/bioviewer/back/util"
 )
 
 func GetRegisterProfile(c *gin.Context) {
@@ -45,6 +45,14 @@ func GetRegisterProfile(c *gin.Context) {
 	}
 }
 
-func PutRegisterMetaData(c *gin.Context) {
-
+func GetOriginalsRows(c *gin.Context) {
+	idp := c.Param("idp")
+	id := c.Param("id")
+	logger.Slog.Infow("Получаем ключи оригиналов по idp и id",
+		"idp", idp,
+		"id", id)
+	intKey, err := hbase.GetInternalKey(idp, id)
+	util.CheckErr(err)
+	rows := hbase.GetOriginalRows(hbase.PHOTO, intKey)
+	c.JSON(200, rows)
 }
