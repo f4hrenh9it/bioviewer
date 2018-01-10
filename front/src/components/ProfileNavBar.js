@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, FormControl, Glyphicon, Navbar} from 'react-bootstrap';
-import {addUserId, addUserIdp, fetchSingleProfile, fetchUpdateProfile} from "../actions/index";
+import {addUserId, addUserIdp, fetchUpdateProfile} from "../actions/index";
 import {connect} from "react-redux";
 import './ProfileNavBar.css';
 
@@ -54,7 +54,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchSingleProfile: (userid, useridp) => dispatch(fetchSingleProfile(userid, useridp)),
     fetchUpdateProfile: (userid, useridp) => dispatch(fetchUpdateProfile(userid, useridp)),
     addUserId: (userid) => dispatch(addUserId(userid)),
     addUserIdp: (useridp) => dispatch(addUserIdp(useridp))

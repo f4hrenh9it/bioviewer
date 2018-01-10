@@ -1,5 +1,5 @@
 import {BAD_USER_ID_ERR, APPEND_USERID
-    , APPEND_USERIDP, RECEIVE_PROFILE, RECEIVE_PROFILE_ERR, RECEIVE_REG_INFO, RECEIVE_VER_INFO, APP_LOADING} from '../constants/ActionTypes'
+    , APPEND_USERIDP, RECEIVE_REG_INFO, RECEIVE_REG_INFO_ERR, RECEIVE_VER_INFO, RECEIVE_VER_INFO_ERR, APP_LOADING} from '../constants/ActionTypes'
 
 export const addUserId = userid => ({
     type: APPEND_USERID,
@@ -21,29 +21,6 @@ export const badUserIdpErr = useridp => ({
     useridp
 });
 
-export const fetchSingleProfile = (userid, useridp) => (dispatch, getState) => {
-    if (!/(\d+)/.test(userid)) {
-        return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
-    }
-    return fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
-        .then((resp) => resp.json())
-        .then((resp) => {
-            dispatch(receiveProfile(resp))
-        })
-        .catch((err) => dispatch(receiveProfileErr(err)))
-};
-
-export const receiveProfile = (jsonProfile) => ({
-    type: RECEIVE_PROFILE,
-    singleProfile: jsonProfile
-});
-
-export const receiveProfileErr = (err) => ({
-    type: RECEIVE_PROFILE_ERR,
-    err: err
-});
-
-
 // New async fetch api
 
 export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState) => {
@@ -58,7 +35,12 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
             .then((resp) => {
                 dispatch(receiveRegisterInfo(resp))
             })
-            .catch((err) => dispatch(receiveProfileErr(err))),
+            .catch((err) => {
+                let profile = {};
+                profile.error = err.message;
+                console.log("error " + err);
+                dispatch(receiveRegisterInfoError(profile))
+            }),
         // fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
         //     .then((resp) => resp.json())
         //     .then((resp) => {
@@ -79,7 +61,17 @@ export const receiveRegisterInfo = (profile) => ({
     regProfile: profile
 });
 
+export const receiveRegisterInfoError = (profile) => ({
+    type: RECEIVE_REG_INFO_ERR,
+    regProfile: profile
+});
+
 export const receiveVerifyInfo = (profile) => ({
     type: RECEIVE_VER_INFO,
+    verProfile: profile
+});
+
+export const receiveVerifyInfoError = (profile) => ({
+    type: RECEIVE_VER_INFO_ERR,
     verProfile: profile
 });
