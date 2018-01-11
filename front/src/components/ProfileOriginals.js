@@ -1,5 +1,5 @@
 import React from 'react';
-import {Carousel, ListGroup, ListGroupItem, Panel, Glyphicon} from 'react-bootstrap';
+import {Carousel, Glyphicon, ListGroup, ListGroupItem, Panel} from 'react-bootstrap';
 
 const SoundItem = (props) => (
     <ListGroupItem bsStyle={props.value.valid ? 'success' : 'danger'}>

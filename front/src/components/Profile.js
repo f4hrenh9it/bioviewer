@@ -11,13 +11,13 @@ export const Profile = (props) => (
         {props.regProfile.error ? <ProfileError error={props.regProfile.error}/> :
         <div>
             <Row>
-                <ProfileStats regProfile={props.regProfile}/>
+                <ProfileStats {...props}/>
             </Row>
             <Col md={6}>
-                <ProfileRegisterInfo regProfile={props.regProfile}/>
+                <ProfileRegisterInfo {...props}/>
             </Col>
             <Col md={6}>
-                <ProfileOriginals regProfile={props.regProfile}/>
+                <ProfileOriginals {...props}/>
             </Col>
         </div>
         }

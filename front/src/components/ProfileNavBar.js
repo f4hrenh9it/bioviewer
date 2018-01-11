@@ -1,10 +1,11 @@
 import React from 'react';
 import {Button, FormControl, Glyphicon, Navbar} from 'react-bootstrap';
-import {addUserId, addUserIdp, fetchUpdateProfile} from "../actions/index";
+import {addUserId, addUserIdp, fetchOriginalsRows, fetchUpdateProfile} from "../actions/index";
 import {connect} from "react-redux";
 import './ProfileNavBar.css';
+import {Link} from "react-router-dom";
 
-export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchUpdateProfile}) {
+export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchUpdateProfile, fetchOriginalsRows}) {
 
     function handleChangeIds(event) {
         event.preventDefault();
@@ -28,15 +29,19 @@ export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchUpda
                              onChange={(e) => handleChangeIdp(e)}/>
             </div>
             <div className="col-xs-2">
-                <Button className="btn btn-primary btn-block"
-                        onClick={() => fetchUpdateProfile(userid, useridp)}>
-                    <Glyphicon glyph="search"/>&nbsp;Профиль
-                </Button>
+                <Link to='/profile'>
+                    <Button className="btn btn-primary btn-block"
+                            onClick={() => fetchUpdateProfile(userid, useridp)}>
+                        <Glyphicon glyph="search"/>&nbsp;Профиль
+                    </Button>
+                </Link>
             </div>
             <div className="col-xs-2">
-                <Button className="btn btn-primary btn-block">
-                    <Glyphicon glyph="stats"/>&nbsp;Статистика
-                </Button>
+                <Link to='/statistics'>
+                    <Button className="btn btn-primary btn-block">
+                        <Glyphicon glyph="stats"/>&nbsp;Статистика
+                    </Button>
+                </Link>
             </div>
             <div className="col-xs-2">
                 <Button className="btn btn-success btn-block">
@@ -51,10 +56,13 @@ export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchUpda
 const mapStateToProps = state => ({
     userid: state.userid_reducer,
     useridp: state.useridp_reducer,
+    originalsRowsPhoto: state.originalsRows_reducer,
+    originalsRowsSound: state.originalsRows_reducer,
 });
 
 const mapDispatchToProps = dispatch => ({
     fetchUpdateProfile: (userid, useridp) => dispatch(fetchUpdateProfile(userid, useridp)),
+    fetchOriginalsRows: (userid, useridp) => dispatch(fetchOriginalsRows(userid, useridp)),
     addUserId: (userid) => dispatch(addUserId(userid)),
     addUserIdp: (useridp) => dispatch(addUserIdp(useridp))
 });

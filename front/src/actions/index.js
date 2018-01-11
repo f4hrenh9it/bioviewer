@@ -1,5 +1,17 @@
-import {BAD_USER_ID_ERR, APPEND_USERID
-    , APPEND_USERIDP, RECEIVE_REG_INFO, RECEIVE_REG_INFO_ERR, RECEIVE_VER_INFO, RECEIVE_VER_INFO_ERR, APP_LOADING} from '../constants/ActionTypes'
+import {BAD_USER_ID_ERR, APPEND_USERID, APPEND_USERIDP, RECEIVE_REG_INFO, RECEIVE_REG_INFO_ERR, RECEIVE_VER_INFO,
+    RECEIVE_VER_INFO_ERR, RECEIVE_ORIGINAL, RECEIVE_ORIGINAL_ERROR, RECEIVE_ORIGINALS_ROWS, APP_LOADING} from '../constants/ActionTypes'
+
+export const loadOriginal = intKey => (dispatch, getState) => (
+    fetch('http://localhost:8080/originals/' + intKey)
+        .then((resp) => resp.json())
+        .then((resp) => {
+            dispatch(receiveOriginal(resp))
+        })
+        .catch((err) => {
+            // как правильно обработать ошибку, на что смотреть в редьюсере? сделать оповещение или алерт в морде?
+            dispatch(receiveOriginalError(err))
+        })
+);
 
 export const addUserId = userid => ({
     type: APPEND_USERID,
@@ -21,11 +33,12 @@ export const badUserIdpErr = useridp => ({
     useridp
 });
 
-// New async fetch api
-
 export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState) => {
     if (!/(\d+)/.test(userid)) {
         return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
+    }
+    if (!/(\w+)/.test(userid)) {
+        return dispatch(badUserIdpErr("idp пользователя должен содержать только латинские буквы"));
     }
 
     dispatch(appLoading(1));
@@ -38,15 +51,38 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
             .catch((err) => {
                 let profile = {};
                 profile.error = err.message;
-                console.log("error " + err);
                 dispatch(receiveRegisterInfoError(profile))
+            })
+    ]);
+    dispatch(appLoading(0));
+};
+
+export const fetchOriginalsRows = (userid, useridp) => async (dispatch, getState) => {
+    if (!/(\d+)/.test(userid)) {
+        return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
+    }
+    if (!/(\w+)/.test(userid)) {
+        return dispatch(badUserIdpErr("idp пользователя должен содержать только латинские буквы"));
+    }
+
+    dispatch(appLoading(1));
+    await Promise.all([
+        fetch('http://localhost:8080/originals/rows/photo/' + useridp + '/' + userid)
+            .then((resp) => resp.json())
+            .then((resp) => {
+                dispatch(receiveOriginalsRows(resp))
+            })
+            .catch((err) => {
+
             }),
-        // fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
-        //     .then((resp) => resp.json())
-        //     .then((resp) => {
-        //         dispatch(receiveVerifyInfo(resp))
-        //     })
-        //     .catch((err) => dispatch(receiveProfileErr(err)))
+        fetch('http://localhost:8080/originals/rows/sound/' + useridp + '/' + userid)
+            .then((resp) => resp.json())
+            .then((resp) => {
+                dispatch(receiveOriginalsRows(resp))
+            })
+            .catch((err) => {
+
+            }),
     ]);
     dispatch(appLoading(0));
 };
@@ -54,6 +90,21 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
 export const appLoading = (loading) => ({
     type: APP_LOADING,
     loading: loading
+});
+
+export const receiveOriginalsRows = (rows) => ({
+    type: RECEIVE_ORIGINALS_ROWS,
+    rows: rows
+});
+
+export const receiveOriginal = (original) => ({
+    type: RECEIVE_ORIGINAL,
+    original: original
+});
+
+export const receiveOriginalError = (original) => ({
+    type: RECEIVE_ORIGINAL_ERROR,
+    original: original
 });
 
 export const receiveRegisterInfo = (profile) => ({

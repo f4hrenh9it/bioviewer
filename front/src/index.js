@@ -14,6 +14,8 @@ import reducers from './reducers'
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger'
 
+import {BrowserRouter} from 'react-router-dom'
+
 import * as log from 'loglevel';
 
 const middleware = [thunk];
@@ -32,7 +34,9 @@ let store = createStore(
 
 ReactDOM.render(
     <Provider store={store}>
-        <CardBoard/>
+        <BrowserRouter>
+            <CardBoard/>
+        </BrowserRouter>
     </Provider>,
     document.getElementById('root'));
 

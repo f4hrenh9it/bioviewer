@@ -2,9 +2,11 @@ import React from 'react';
 
 import {connect} from 'react-redux'
 
-import {Profile} from "./Profile";
-import {ProfileLoading} from "./ProfileLoading";
+import {Route, Switch} from 'react-router-dom'
 import ProfileNavBar from "./ProfileNavBar";
+import Statistics from "./Statistics";
+import ProfilePad from "./ProfilePad";
+import {withRouter} from "react-router-dom";
 import './Profile.css';
 
 
@@ -13,17 +15,19 @@ function ProfileBoard({regProfile, verProfile, loading}) {
         <div id="wrap">
             <ProfileNavBar/>
             <div className="container">
-                {loading || regProfile == null ? <ProfileLoading loading={loading}/> : <Profile regProfile={regProfile}/>}
+                <Switch>
+                    <Route exact path='/statistics' component={Statistics}/>
+                    <Route exact path='/profile' component={ProfilePad}/>
+                </Switch>
             </div>
         </div>
     );
 }
 
 const mapStateToProps = state => ({
-    singleProfile: state.profile_reducer,
     regProfile: state.regProfile_reducer,
     verProfile: state.verProfile_reducer,
     loading: state.loading_reducer,
 });
 
-export default connect(mapStateToProps)(ProfileBoard);
+export default withRouter(connect(mapStateToProps)(ProfileBoard));

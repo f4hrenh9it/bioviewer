@@ -46,6 +46,7 @@ func GetRegisterProfile(c *gin.Context) {
 }
 
 func GetOriginalsRows(c *gin.Context) {
+	modality := c.Param("modality")
 	idp := c.Param("idp")
 	id := c.Param("id")
 	logger.Slog.Infow("Получаем ключи оригиналов по idp и id",
@@ -53,6 +54,20 @@ func GetOriginalsRows(c *gin.Context) {
 		"id", id)
 	intKey, err := hbase.GetInternalKey(idp, id)
 	util.CheckErr(err)
-	rows := hbase.GetOriginalRows(hbase.PHOTO, intKey)
-	c.JSON(200, rows)
+	if modality == "photo" {
+		rows := hbase.GetOriginalRows(hbase.PHOTO, intKey)
+		c.JSON(200, rows)
+	}
+	if modality == "sound" {
+		rows := hbase.GetOriginalRows(hbase.SOUND, intKey)
+		c.JSON(200, rows)
+	}
+}
+
+func GetOriginal(c *gin.Context) {
+	intKey := c.Param("intKey")
+	logger.Slog.Infow("Получаем оригинал по ключу",
+		"intKey", intKey)
+	original := hbase.GetOriginal(hbase.PHOTO, []byte(intKey))
+	c.JSON(200, original)
 }
