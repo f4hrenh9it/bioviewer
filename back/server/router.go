@@ -31,12 +31,13 @@ func GetRouter(opts ...func(*gin.Engine)) *gin.Engine {
 
 	v1 := r.Group("/")
 	{
-		v1.GET("/profile/:idp/:id", GetRegisterProfile)
-		v1.GET("/originals/rows/:modality/:idp/:id", GetOriginalsRows)
+		v1.GET("/profile/:idp/:id/", GetRegisterProfile)
+		v1.GET("/originals/rows/:modality/:idp/:id/", GetOriginalsRows)
 		v1.GET("/originals/original/:intKey/", GetOriginal)
 
-		v1.GET("/stats/operations", GetStatsOperations)
-		v1.GET("/stats/operations/:idp/:id", GetStatsOperations)
+		v1.GET("/stats/operations/", GetStatsOperations)
+		v1.GET("/stats/operations/:idp/:id/", GetStatsOperations)
+		v1.GET("/stats/operationsPaged/:rowKeyFrom/:pageSize/", GetStatsOperations)
 	}
 
 	return r

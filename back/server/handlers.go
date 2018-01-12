@@ -6,6 +6,7 @@ import (
 	"github.com/lulunevermind/bioviewer/back/hbase/stats"
 	"github.com/lulunevermind/bioviewer/back/logger"
 	"github.com/lulunevermind/bioviewer/back/util"
+	"strconv"
 )
 
 func GetRegisterProfile(c *gin.Context) {
@@ -76,10 +77,25 @@ func GetOriginal(c *gin.Context) {
 func GetStatsOperations(c *gin.Context) {
 	idp := c.Param("idp")
 	id := c.Param("id")
+	rowKeyFrom := c.Param("rowKeyFrom")
+	pageSize := c.Param("pageSize")
+	pageSizeInt, _ := strconv.ParseInt(pageSize, 10, 64)
+
 	if idp == "" || id == "" {
-		logger.Slog.Infow("Получаем операции для всех пользователей")
-		operations := hbase.GetStatsOperations()
-		c.JSON(200, operations)
+		if pageSize == "" && rowKeyFrom == "" {
+			logger.Slog.Infow("Получаем операции для всех пользователей без пагинации")
+			operations := hbase.GetStatsOperations()
+			c.JSON(200, operations)
+		} else {
+			logger.Slog.Infow("Получаем операции для всех пользователей с размером страницы, начиная с ключа",
+				"pageSize", pageSize,
+					"rowKeyFrom", rowKeyFrom)
+			operations := hbase.GetStatsOperations(
+				stats.OptionPageFilter(pageSizeInt),
+				stats.OptionRowKeyFromFilter(rowKeyFrom),
+			)
+			c.JSON(200, operations)
+		}
 	} else {
 		intKey, err := hbase.GetInternalKey(idp, id)
 		util.CheckErr(err)

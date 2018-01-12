@@ -2,7 +2,7 @@ import {BAD_USER_ID_ERR, APPEND_USERID, APPEND_USERIDP, RECEIVE_REG_INFO, RECEIV
     RECEIVE_VER_INFO_ERR, RECEIVE_ORIGINAL, RECEIVE_ORIGINAL_ERROR, RECEIVE_ORIGINALS_ROWS, RECEIVE_OPERATIONS_USER, APP_LOADING} from '../constants/ActionTypes'
 
 export const loadOriginal = intKey => (dispatch, getState) => (
-    fetch('http://localhost:8080/originals/' + intKey)
+    fetch('http://localhost:8080/originals/' + intKey + "/")
         .then((resp) => resp.json())
         .then((resp) => {
             dispatch(receiveOriginal(resp))
@@ -43,10 +43,10 @@ const checkIdIdpPair = (userid, useridp, dispatch) => {
 };
 
 export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState) => {
-    checkIdIdpPair(userid, useridp);
+    checkIdIdpPair(userid, useridp, dispatch);
     dispatch(appLoading(1));
     await Promise.all([
-        fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
+        fetch('http://localhost:8080/profile/' + useridp + "/" + userid + "/")
             .then((resp) => resp.json())
             .then((resp) => {
                 dispatch(receiveRegisterInfo(resp))
@@ -64,7 +64,7 @@ export const fetchOriginalsRows = (userid, useridp) => async (dispatch, getState
     checkIdIdpPair(userid, useridp);
     dispatch(appLoading(1));
     await Promise.all([
-        fetch('http://localhost:8080/originals/rows/photo/' + useridp + '/' + userid)
+        fetch('http://localhost:8080/originals/rows/photo/' + useridp + '/' + userid + "/")
             .then((resp) => resp.json())
             .then((resp) => {
                 dispatch(receiveOriginalsRows(resp))
@@ -72,7 +72,7 @@ export const fetchOriginalsRows = (userid, useridp) => async (dispatch, getState
             .catch((err) => {
 
             }),
-        fetch('http://localhost:8080/originals/rows/sound/' + useridp + '/' + userid)
+        fetch('http://localhost:8080/originals/rows/sound/' + useridp + '/' + userid + "/")
             .then((resp) => resp.json())
             .then((resp) => {
                 dispatch(receiveOriginalsRows(resp))
@@ -88,7 +88,7 @@ export const fetchOperationsStatsForUser = (userid, useridp) => async (dispatch,
     checkIdIdpPair(userid, useridp);
     dispatch(appLoading(1));
     await Promise.all([
-        fetch('http://localhost:8080/stats/operations/' + useridp + '/' + userid)
+        fetch('http://localhost:8080/stats/operations/' + useridp + '/' + userid + "/")
             .then((resp) => resp.json())
             .then((resp) => {
                 dispatch(receiveOperationsForUser(resp))

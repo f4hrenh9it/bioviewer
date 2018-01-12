@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
+	"github.com/lulunevermind/bioviewer/back/hbase/stats"
 )
 
 var host = "localhost"
@@ -28,7 +29,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetOriginalsRows(t *testing.T) {
-	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%d", host, port, idp, userid)
+	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%d/", host, port, idp, userid)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	rows := &[]string{}
@@ -37,7 +38,7 @@ func TestGetOriginalsRows(t *testing.T) {
 }
 
 func TestGetCountOriginals(t *testing.T) {
-	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%d", host, port, idp, userid)
+	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%d/", host, port, idp, userid)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	rows := &[]string{}
@@ -46,7 +47,7 @@ func TestGetCountOriginals(t *testing.T) {
 }
 
 func TestGetRegProfile(t *testing.T) {
-	url := fmt.Sprintf("http://%s:%d/profile/%s/%d", host, port, idp, userid)
+	url := fmt.Sprintf("http://%s:%d/profile/%s/%d/", host, port, idp, userid)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	profile := new(hbase.BioRegisterProfile)
@@ -58,7 +59,7 @@ func TestGetRegProfile(t *testing.T) {
 
 func TestGetRegProfileErrorNoUser(t *testing.T) {
 	notInHbaseId := 100200100200100200
-	url := fmt.Sprintf("http://%s:%d/profile/%s/%d", host, port, idp, notInHbaseId)
+	url := fmt.Sprintf("http://%s:%d/profile/%s/%d/", host, port, idp, notInHbaseId)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	profile := new(hbase.BioRegisterProfile)
@@ -68,7 +69,7 @@ func TestGetRegProfileErrorNoUser(t *testing.T) {
 
 func TestGetRegProfileErrorNoIdp(t *testing.T) {
 	wrongIdp := "vhsbwb3"
-	url := fmt.Sprintf("http://%s:%d/profile/%s/%d", host, port, wrongIdp, userid)
+	url := fmt.Sprintf("http://%s:%d/profile/%s/%d/", host, port, wrongIdp, userid)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	profile := new(hbase.BioRegisterProfile)
@@ -76,18 +77,34 @@ func TestGetRegProfileErrorNoIdp(t *testing.T) {
 	assert.Equal(t, "таблица idp не найдена в базе", profile.Error)
 }
 
-func TestGetStatsOperationsForUser(t *testing.T) {
-	url := fmt.Sprintf("http://%s:%d/stats/operations/%s/%d", host, port, idp, userid)
+func TestGetStatsOperationsForUserNoPagination(t *testing.T) {
+	url := fmt.Sprintf("http://%s:%d/stats/operations/%s/%d/", host, port, idp, userid)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	body, err := ioutil.ReadAll(resp.Body)
 	assert.Contains(t, string(body), "op_type")
 }
 
-func TestGetStatsOperationsForAll(t *testing.T) {
-	url := fmt.Sprintf("http://%s:%d/stats/operations", host, port)
+func TestGetStatsOperationsForAllNoPagination(t *testing.T) {
+	url := fmt.Sprintf("http://%s:%d/stats/operations/", host, port)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	body, err := ioutil.ReadAll(resp.Body)
 	fmt.Printf("Body = %s", body)
+}
+
+func TestGetStatsOperationsForAllWithPagination(t *testing.T) {
+	batchSize := 50
+	startRow := "NULL"
+
+	for i := 0; i < 15; i++ {
+		url := fmt.Sprintf("http://%s:%d/stats/operationsPaged/%s/%d/", host, port, startRow, batchSize)
+		resp, err := http.Get(url)
+		util.CheckErr(err)
+		res := stats.NewPageableOperations()
+		json.NewDecoder(resp.Body).Decode(res)
+		assert.Len(t, res.Operations, batchSize)
+		fmt.Printf("[Operations len = %d] [last row = %s]\n", len(res.Operations), res.LastRowKey)
+		startRow = string(res.LastRowKey)
+	}
 }

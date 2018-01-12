@@ -7,7 +7,6 @@ import (
 	"github.com/lulunevermind/bioviewer/back/util"
 	"context"
 	"errors"
-	"fmt"
 	"reflect"
 	"encoding/json"
 	"github.com/lulunevermind/bioviewer/back/hbase/stats"
@@ -18,7 +17,7 @@ func GetInternalKey(idp string, userid string) ([]byte, error) {
 	logger.Slog.Infow("Получаем внутренний ключ по idp и userid", "idp", idp, "userid", userid)
 	getRequest, err := hrpc.NewGetStr(context.Background(), IDPPREFIX+idp, userid, hrpc.Families(KEYCF))
 	util.CheckErr(err)
-	getRsp, err := client.Get(getRequest)
+	getRsp, err := Client.Get(getRequest)
 	if err != nil {
 		if err.Error() == "table not found" {
 			return nil, errors.New("таблица idp не найдена в базе")
@@ -47,7 +46,7 @@ func GetOriginalRows(modality Modality, intKey []byte) [][]byte {
 		hrpc.Filters(filterList))
 	util.CheckErr(err)
 
-	scanRsp := client.Scan(scanRequest)
+	scanRsp := Client.Scan(scanRequest)
 	util.CheckErr(err)
 	keys := [][]byte{}
 	for {
@@ -66,7 +65,7 @@ func GetOriginal(modality Modality, intKey []byte) map[string]interface{} {
 		"intKey", intKey)
 	getReq, err := hrpc.NewGetStr(context.Background(), ORIGINALPREFIX+modality.String(), string(intKey))
 	util.CheckErr(err)
-	getRsp, err := client.Get(getReq)
+	getRsp, err := Client.Get(getReq)
 
 	original := map[string]interface{}{}
 	for _, v := range getRsp.Cells {
@@ -96,7 +95,7 @@ func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture
 		hrpc.Filters(pFilter), hrpc.Families(families))
 	util.CheckErr(err)
 
-	scanRsp := client.Scan(scanRequest)
+	scanRsp := Client.Scan(scanRequest)
 	util.CheckErr(err)
 
 	originals := []map[string]interface{}{}
@@ -133,11 +132,11 @@ func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture
 //	values := map[string]map[string][]byte{cf: {qualifier: []byte(value)}}
 //	putRequest, err := hrpc.NewPutStr(context.Background(), table, cf, values)
 //	util.CheckErr(err)
-//	rsp, err := client.Put(putRequest)
+//	rsp, err := Client.Put(putRequest)
 //	fmt.Printf("Response of put is = %s", rsp)
 //}
 
-func GetStatsOperations(opts ...func(*filter.List)) []map[string]interface{} {
+func GetStatsOperations(opts ...func(*filter.List)) *stats.PageableOperations {
 	var scanRequest *hrpc.Scan
 	var err error
 
@@ -149,10 +148,10 @@ func GetStatsOperations(opts ...func(*filter.List)) []map[string]interface{} {
 	}
 	util.CheckErr(err)
 
-	scanRsp := client.Scan(scanRequest)
+	scanRsp := Client.Scan(scanRequest)
 	util.CheckErr(err)
 
-	operations := []map[string]interface{}{}
+	operations := stats.NewPageableOperations()
 	for {
 		if row, err := scanRsp.Next(); err == nil {
 			operation := make(map[string]interface{}, 0)
@@ -171,8 +170,8 @@ func GetStatsOperations(opts ...func(*filter.List)) []map[string]interface{} {
 					operation["empl_sign"] = string(v.Value)
 				}
 			}
-			operations = append(operations, operation)
-			fmt.Printf("Operation = %s", operation)
+			operations.Operations = append(operations.Operations, operation)
+			operations.LastRowKey = row.Cells[0].Row
 		} else {
 			break
 		}

@@ -4,11 +4,11 @@ import (
 	"github.com/tsuna/gohbase"
 )
 
-var client gohbase.Client
-var adminClient gohbase.AdminClient
+var Client gohbase.Client
+var AdminClient gohbase.AdminClient
 
 func init() {
-	client = gohbase.NewClient("fr00nbpadm01,fr00nbphbase02,fr00nbphbase01",
+	Client = gohbase.NewClient("fr00nbpadm01,fr00nbphbase02,fr00nbphbase01",
 		gohbase.ZookeeperRoot("/hbase-unsecure"))
-	adminClient = gohbase.NewAdminClient("fr00nbphbase01")
+	AdminClient = gohbase.NewAdminClient("fr00nbphbase01")
 }
