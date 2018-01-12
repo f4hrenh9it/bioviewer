@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"reflect"
 	"encoding/json"
+	"github.com/lulunevermind/bioviewer/back/hbase/stats"
 )
 
 // Получает внутренний ключ по внешнему и имени IDP, производя поиск в таблице IDPPREFIX+IDP
@@ -136,12 +137,16 @@ func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture
 //	fmt.Printf("Response of put is = %s", rsp)
 //}
 
-func GetStatsOperationsForUser(intKey []byte) []map[string]interface{} {
-	logger.Slog.Infow("Получаем статистику по операциям для пользователя по внутреннему ключу",
-		"intKey", intKey)
+func GetStatsOperations(opts ...func(*filter.List)) []map[string]interface{} {
+	var scanRequest *hrpc.Scan
+	var err error
 
-	pFilter := filter.NewPrefixFilter(intKey)
-	scanRequest, err := hrpc.NewScanStr(context.Background(), OPERATIONS_TABLE, hrpc.Filters(pFilter))
+	if len(opts) == 0 {
+		scanRequest, err = hrpc.NewScanStr(context.Background(), OPERATIONS_TABLE)
+	} else {
+		filterList := stats.NewStatsFilterList(opts...)
+		scanRequest, err = hrpc.NewScanStr(context.Background(), OPERATIONS_TABLE, hrpc.Filters(filterList))
+	}
 	util.CheckErr(err)
 
 	scanRsp := client.Scan(scanRequest)

@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/lulunevermind/bioviewer/back/hbase"
+	"github.com/lulunevermind/bioviewer/back/hbase/stats"
 	"github.com/lulunevermind/bioviewer/back/logger"
 	"github.com/lulunevermind/bioviewer/back/util"
 )
@@ -72,14 +73,20 @@ func GetOriginal(c *gin.Context) {
 	c.JSON(200, original)
 }
 
-func GetStatsOperationsForUser(c *gin.Context) {
+func GetStatsOperations(c *gin.Context) {
 	idp := c.Param("idp")
 	id := c.Param("id")
-	intKey, err := hbase.GetInternalKey(idp, id)
-	util.CheckErr(err)
-	logger.Slog.Infow("Получаем операции по idp и id",
-		"idp", idp,
-		"id", id)
-	operations := hbase.GetStatsOperationsForUser(intKey)
-	c.JSON(200, operations)
+	if idp == "" || id == "" {
+		logger.Slog.Infow("Получаем операции для всех пользователей")
+		operations := hbase.GetStatsOperations()
+		c.JSON(200, operations)
+	} else {
+		intKey, err := hbase.GetInternalKey(idp, id)
+		util.CheckErr(err)
+		logger.Slog.Infow("Получаем операции по idp и id",
+			"idp", idp,
+			"id", id)
+		operations := hbase.GetStatsOperations(stats.OptionUserPrefixFilter(intKey))
+		c.JSON(200, operations)
+	}
 }

@@ -81,5 +81,13 @@ func TestGetStatsOperationsForUser(t *testing.T) {
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	body, err := ioutil.ReadAll(resp.Body)
+	assert.Contains(t, string(body), "op_type")
+}
+
+func TestGetStatsOperationsForAll(t *testing.T) {
+	url := fmt.Sprintf("http://%s:%d/stats/operations", host, port)
+	resp, err := http.Get(url)
+	util.CheckErr(err)
+	body, err := ioutil.ReadAll(resp.Body)
 	fmt.Printf("Body = %s", body)
 }

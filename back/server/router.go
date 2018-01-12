@@ -34,8 +34,9 @@ func GetRouter(opts ...func(*gin.Engine)) *gin.Engine {
 		v1.GET("/profile/:idp/:id", GetRegisterProfile)
 		v1.GET("/originals/rows/:modality/:idp/:id", GetOriginalsRows)
 		v1.GET("/originals/original/:intKey/", GetOriginal)
-		
-		v1.GET("/stats/operations/:idp/:id", GetStatsOperationsForUser)
+
+		v1.GET("/stats/operations", GetStatsOperations)
+		v1.GET("/stats/operations/:idp/:id", GetStatsOperations)
 	}
 
 	return r
