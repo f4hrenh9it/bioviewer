@@ -1,5 +1,5 @@
 import {BAD_USER_ID_ERR, APPEND_USERID, APPEND_USERIDP, RECEIVE_REG_INFO, RECEIVE_REG_INFO_ERR, RECEIVE_VER_INFO,
-    RECEIVE_VER_INFO_ERR, RECEIVE_ORIGINAL, RECEIVE_ORIGINAL_ERROR, RECEIVE_ORIGINALS_ROWS, APP_LOADING} from '../constants/ActionTypes'
+    RECEIVE_VER_INFO_ERR, RECEIVE_ORIGINAL, RECEIVE_ORIGINAL_ERROR, RECEIVE_ORIGINALS_ROWS, RECEIVE_OPERATIONS_USER, APP_LOADING} from '../constants/ActionTypes'
 
 export const loadOriginal = intKey => (dispatch, getState) => (
     fetch('http://localhost:8080/originals/' + intKey)
@@ -33,14 +33,17 @@ export const badUserIdpErr = useridp => ({
     useridp
 });
 
-export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState) => {
+const checkIdIdpPair = (userid, useridp, dispatch) => {
     if (!/(\d+)/.test(userid)) {
         return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
     }
     if (!/(\w+)/.test(userid)) {
         return dispatch(badUserIdpErr("idp пользователя должен содержать только латинские буквы"));
     }
+};
 
+export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState) => {
+    checkIdIdpPair(userid, useridp);
     dispatch(appLoading(1));
     await Promise.all([
         fetch('http://localhost:8080/profile/' + useridp + "/" + userid)
@@ -58,13 +61,7 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
 };
 
 export const fetchOriginalsRows = (userid, useridp) => async (dispatch, getState) => {
-    if (!/(\d+)/.test(userid)) {
-        return dispatch(badUserIdErr("id пользователя должен содержать цифры"));
-    }
-    if (!/(\w+)/.test(userid)) {
-        return dispatch(badUserIdpErr("idp пользователя должен содержать только латинские буквы"));
-    }
-
+    checkIdIdpPair(userid, useridp);
     dispatch(appLoading(1));
     await Promise.all([
         fetch('http://localhost:8080/originals/rows/photo/' + useridp + '/' + userid)
@@ -87,9 +84,30 @@ export const fetchOriginalsRows = (userid, useridp) => async (dispatch, getState
     dispatch(appLoading(0));
 };
 
+export const fetchOperationsStatsForUser = (userid, useridp) => async (dispatch, getState) => {
+    checkIdIdpPair(userid, useridp);
+    dispatch(appLoading(1));
+    await Promise.all([
+        fetch('http://localhost:8080/stats/operations/' + useridp + '/' + userid)
+            .then((resp) => resp.json())
+            .then((resp) => {
+                dispatch(receiveOperationsForUser(resp))
+            })
+            .catch((err) => {
+
+            })
+    ]);
+    dispatch(appLoading(0));
+};
+
 export const appLoading = (loading) => ({
     type: APP_LOADING,
     loading: loading
+});
+
+export const receiveOperationsForUser = (operations) => ({
+    type: RECEIVE_OPERATIONS_USER,
+    operations: operations
 });
 
 export const receiveOriginalsRows = (rows) => ({

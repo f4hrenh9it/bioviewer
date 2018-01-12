@@ -11,6 +11,7 @@ import (
 	"github.com/lulunevermind/bioviewer/back/hbase"
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 )
 
 var host = "localhost"
@@ -73,4 +74,12 @@ func TestGetRegProfileErrorNoIdp(t *testing.T) {
 	profile := new(hbase.BioRegisterProfile)
 	json.NewDecoder(resp.Body).Decode(profile)
 	assert.Equal(t, "таблица idp не найдена в базе", profile.Error)
+}
+
+func TestGetStatsOperationsForUser(t *testing.T) {
+	url := fmt.Sprintf("http://%s:%d/stats/operations/%s/%d", host, port, idp, userid)
+	resp, err := http.Get(url)
+	util.CheckErr(err)
+	body, err := ioutil.ReadAll(resp.Body)
+	fmt.Printf("Body = %s", body)
 }

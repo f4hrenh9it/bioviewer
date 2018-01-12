@@ -28,4 +28,6 @@ const (
 	IDPPREFIX = "ids_"
 	ORIGINALPREFIX = "original_"
 	TEMPLATEPREFIX = "template_"
+
+	OPERATIONS_TABLE = "operations"
 )

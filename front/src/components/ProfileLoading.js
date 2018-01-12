@@ -1,7 +1,7 @@
 import React from 'react';
 import {Glyphicon, Jumbotron} from 'react-bootstrap';
 
-export const ProfileLoading = (props) => (
+export const LoadingBar = (props) => (
     <div>
         {props.loading == null ? null :
             <Jumbotron>

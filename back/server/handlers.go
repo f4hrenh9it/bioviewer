@@ -71,3 +71,15 @@ func GetOriginal(c *gin.Context) {
 	original := hbase.GetOriginal(hbase.PHOTO, []byte(intKey))
 	c.JSON(200, original)
 }
+
+func GetStatsOperationsForUser(c *gin.Context) {
+	idp := c.Param("idp")
+	id := c.Param("id")
+	intKey, err := hbase.GetInternalKey(idp, id)
+	util.CheckErr(err)
+	logger.Slog.Infow("Получаем операции по idp и id",
+		"idp", idp,
+		"id", id)
+	operations := hbase.GetStatsOperationsForUser(intKey)
+	c.JSON(200, operations)
+}

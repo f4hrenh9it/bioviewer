@@ -7,6 +7,7 @@
     "bootstrap": "^3.3.7",
     "flow-bin": "^0.52.0",
     "loglevel": "^1.4.1",
+    "namor": "^1.0.1",
     "react": "^15.6.1",
     "react-addons-css-transition-group": "^15.6.2",
     "react-bootstrap": "^0.31.2",
@@ -17,6 +18,7 @@
     "react-redux": "^5.0.6",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.11",
+    "react-table": "^6.7.6",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0"

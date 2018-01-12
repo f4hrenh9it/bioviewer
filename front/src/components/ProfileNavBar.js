@@ -4,8 +4,10 @@ import {addUserId, addUserIdp, fetchOriginalsRows, fetchUpdateProfile} from "../
 import {connect} from "react-redux";
 import './ProfileNavBar.css';
 import {Link} from "react-router-dom";
+import {fetchOperationsStatsForUser} from "../actions";
 
-export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchUpdateProfile, fetchOriginalsRows}) {
+export function ProfileNavBar({addUserId, userid, addUserIdp, useridp,
+                                  fetchUpdateProfile, fetchOriginalsRows, fetchOperationsStatsForUser}) {
 
     function handleChangeIds(event) {
         event.preventDefault();
@@ -38,7 +40,8 @@ export function ProfileNavBar({addUserId, userid, addUserIdp, useridp, fetchUpda
             </div>
             <div className="col-xs-2">
                 <Link to='/statistics'>
-                    <Button className="btn btn-primary btn-block">
+                    <Button className="btn btn-primary btn-block"
+                        onClick={() => fetchOperationsStatsForUser(userid, useridp)}>
                         <Glyphicon glyph="stats"/>&nbsp;Статистика
                     </Button>
                 </Link>
@@ -63,6 +66,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     fetchUpdateProfile: (userid, useridp) => dispatch(fetchUpdateProfile(userid, useridp)),
     fetchOriginalsRows: (userid, useridp) => dispatch(fetchOriginalsRows(userid, useridp)),
+    fetchOperationsStatsForUser: (userid, useridp) => dispatch(fetchOperationsStatsForUser(userid, useridp)),
     addUserId: (userid) => dispatch(addUserId(userid)),
     addUserIdp: (useridp) => dispatch(addUserIdp(useridp))
 });

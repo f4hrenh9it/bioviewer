@@ -2,12 +2,12 @@ import React from 'react';
 import {withRouter} from "react-router-dom";
 import {fetchUpdateProfile} from "../actions/index";
 import {connect} from "react-redux";
-import {ProfileLoading} from "./ProfileLoading";
+import {LoadingBar} from "./ProfileLoading";
 import {Profile} from "./Profile";
 
 export const ProfilePad = ({regProfile, verProfile, loading}) => (
     <div>
-        {loading || regProfile == null ? <ProfileLoading loading={loading}/> :
+        {loading || regProfile == null ? <LoadingBar loading={loading}/> :
             <Profile regProfile={regProfile}/>}
     </div>
 );

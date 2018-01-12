@@ -89,11 +89,10 @@ func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture
 		"intKey", intKey)
 
 	pFilter := filter.NewPrefixFilter(intKey)
-	//keyOnlyFilter := filter.NewKeyOnlyFilter(false)
-	femilies := map[string][]string{"modality": {"data", "valid"}}
+	families := map[string][]string{"modality": {"data", "valid"}}
 	scanRequest, err := hrpc.NewScanStr(context.Background(),
 		ORIGINALPREFIX+modality.String(),
-		hrpc.Filters(pFilter), hrpc.Families(femilies))
+		hrpc.Filters(pFilter), hrpc.Families(families))
 	util.CheckErr(err)
 
 	scanRsp := client.Scan(scanRequest)
@@ -126,13 +125,52 @@ func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture
 	}
 }
 
-// Изменяет метаданные регистрации (таблица еще не определена)
-func PutMetaData(table string, cf string, qualifier string, value string) {
-	//TODO: Продумать как хранить и изменять мету относящуюся к регистрации
-	// Values maps a ColumnFamily -> Qualifiers -> Values.
-	values := map[string]map[string][]byte{cf: {qualifier: []byte(value)}}
-	putRequest, err := hrpc.NewPutStr(context.Background(), table, cf, values)
+//// Изменяет метаданные регистрации (таблица еще не определена)
+//func PutMetaData(table string, cf string, qualifier string, value string) {
+//	//TODO: Продумать как хранить и изменять мету относящуюся к регистрации
+//	// Values maps a ColumnFamily -> Qualifiers -> Values.
+//	values := map[string]map[string][]byte{cf: {qualifier: []byte(value)}}
+//	putRequest, err := hrpc.NewPutStr(context.Background(), table, cf, values)
+//	util.CheckErr(err)
+//	rsp, err := client.Put(putRequest)
+//	fmt.Printf("Response of put is = %s", rsp)
+//}
+
+func GetStatsOperationsForUser(intKey []byte) []map[string]interface{} {
+	logger.Slog.Infow("Получаем статистику по операциям для пользователя по внутреннему ключу",
+		"intKey", intKey)
+
+	pFilter := filter.NewPrefixFilter(intKey)
+	scanRequest, err := hrpc.NewScanStr(context.Background(), OPERATIONS_TABLE, hrpc.Filters(pFilter))
 	util.CheckErr(err)
-	rsp, err := client.Put(putRequest)
-	fmt.Printf("Response of put is = %s", rsp)
+
+	scanRsp := client.Scan(scanRequest)
+	util.CheckErr(err)
+
+	operations := []map[string]interface{}{}
+	for {
+		if row, err := scanRsp.Next(); err == nil {
+			operation := make(map[string]interface{}, 0)
+			for _, v := range row.Cells {
+				if reflect.DeepEqual(v.Qualifier, []byte("address")) {
+					operation["date"] = *v.Timestamp
+					operation["address"] = string(v.Value)
+				}
+				if reflect.DeepEqual(v.Qualifier, []byte("info_system")) {
+					operation["info_system"] = string(v.Value)
+				}
+				if reflect.DeepEqual(v.Qualifier, []byte("op_type")) {
+					operation["op_type"] = string(v.Value)
+				}
+				if reflect.DeepEqual(v.Qualifier, []byte("empl_sign")) {
+					operation["empl_sign"] = string(v.Value)
+				}
+			}
+			operations = append(operations, operation)
+			fmt.Printf("Operation = %s", operation)
+		} else {
+			break
+		}
+	}
+	return operations
 }

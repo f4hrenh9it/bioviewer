@@ -1,29 +1,56 @@
 import React from 'react';
-import {fetchUpdateProfile} from "../actions/index";
+import {LoadingBar} from "./ProfileLoading";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import './ProfileNavBar.css';
+import ReactTable from 'react-table'
+import "react-table/react-table.css";
 
-export const Statistics = props => (
+import './Statistics.css';
+
+export const Statistics = ({operationsUser, loading}) => (
     <div>
-        STATISTICS
-        STATISTICS
-        STATISTICS
-        STATISTICS
-        STATISTICS
-        STATISTICS
-        STATISTICS
-        STATISTICS
-        STATISTICS
+        {loading ? <LoadingBar loading={loading}/> :
+            <ReactTable
+                data={operationsUser}
+                columns={[
+                    {
+                        Header: "address",
+                        columns: [
+                            {
+                                Header: "address",
+                                accessor: "address"
+                            },
+                            {
+                                Header: "date",
+                                accessor: "date"
+                            },
+                            {
+                                Header: "empl_sign",
+                                accessor: "empl_sign"
+                            },
+                            {
+                                Header: "info_system",
+                                accessor: "info_system"
+                            },
+                            {
+                                Header: "op_type",
+                                accessor: "op_type"
+                            },
+                        ]
+                    },
+                ]}
+                defaultPageSize={10}
+                className="-striped -highlight"
+            />}
     </div>
 );
 
 const mapStateToProps = state => ({
-
+    operationsUser: state.operationsUser_reducer,
+    loading: state.loading_reducer,
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchUpdateProfile: (userid, useridp) => dispatch(fetchUpdateProfile(userid, useridp)),
 });
 
 export default withRouter(connect(
