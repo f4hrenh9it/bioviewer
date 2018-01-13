@@ -10,6 +10,7 @@ import (
 	"reflect"
 	"encoding/json"
 	"github.com/lulunevermind/bioviewer/back/hbase/stats"
+	"fmt"
 )
 
 // Получает внутренний ключ по внешнему и имени IDP, производя поиск в таблице IDPPREFIX+IDP
@@ -172,6 +173,7 @@ func GetStatsOperations(opts ...func(*filter.List)) *stats.PageableOperations {
 			}
 			operations.Operations = append(operations.Operations, operation)
 			operations.LastRowKey = row.Cells[0].Row
+			fmt.Printf("Last key =%s\n", operations.LastRowKey)
 		} else {
 			break
 		}

@@ -29,5 +29,5 @@ const (
 	ORIGINALPREFIX = "original_"
 	TEMPLATEPREFIX = "template_"
 
-	OPERATIONS_TABLE = "operations"
+	OPERATIONS_TABLE = "operations_test"
 )
