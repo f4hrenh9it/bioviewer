@@ -10,7 +10,7 @@ export const fetchOperationsStats = (userid, useridp, pageSize) => async (dispat
     dispatch(appLoading(1));
     if (userid === "" && useridp === "") {
         await Promise.all([
-            fetch('http://localhost:8080/stats/operations/')
+            fetch('/stats/operations/')
                 .then((resp) => resp.json())
                 .then((resp) => {
                     dispatch(receiveOperationsStats(resp))
@@ -22,7 +22,7 @@ export const fetchOperationsStats = (userid, useridp, pageSize) => async (dispat
     } else {
         // если usedid + useridp, то бэк получает intKey и добавляет фильтр для сканера
         await Promise.all([
-            fetch('http://localhost:8080/stats/operations/' + useridp + '/' + userid + '/')
+            fetch('/stats/operations/' + useridp + '/' + userid + '/')
                 .then((resp) => resp.json())
                 .then((resp) => {
                     dispatch(receiveOperationsStats(resp))

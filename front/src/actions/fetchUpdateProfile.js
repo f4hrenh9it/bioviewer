@@ -32,7 +32,7 @@ export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState
     }
     dispatch(appLoading(1));
     await Promise.all([
-        fetch('http://localhost:8080/profile/' + useridp + "/" + userid + "/")
+        fetch('/profile/' + useridp + "/" + userid + "/")
             .then((resp) => resp.json())
             .then((resp) => {
                 dispatch(receiveRegisterInfo(resp))
