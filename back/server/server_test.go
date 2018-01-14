@@ -93,7 +93,6 @@ func TestGetStatsOperationsForAllNoPagination(t *testing.T) {
 	fmt.Printf("Body = %s", body)
 }
 
-
 // operations = (iterations x pageSize) = 189 x 25 = 4725
 // operations_test = 189 x 25 = 4725
 func TestGetStatsOperationsForAllWithPagination(t *testing.T) {

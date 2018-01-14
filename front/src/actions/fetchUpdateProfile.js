@@ -27,7 +27,7 @@ export const receiveRegisterInfoError = (profile) => ({
 });
 
 export const fetchUpdateProfile = (userid, useridp) => async (dispatch, getState) => {
-    if (checkIdIdpPair(userid, useridp, dispatch) === 1) {
+    if (checkIdIdpPair(userid, useridp, dispatch)) {
         return
     }
     dispatch(appLoading(1));

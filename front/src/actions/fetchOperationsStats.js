@@ -1,4 +1,4 @@
-import {RECEIVE_OPERATIONS_USER} from "../constants/ActionTypes";
+import {RECEIVE_OPERATIONS_USER, RECEIVE_OPERATIONS_USER_ERROR} from "../constants/ActionTypes";
 import {appLoading} from "./index";
 
 export const receiveOperationsStats = (operations) => ({
@@ -6,7 +6,24 @@ export const receiveOperationsStats = (operations) => ({
     operations: operations
 });
 
+export const receiveOperationsStatsSearchError = (operations) => ({
+    type: RECEIVE_OPERATIONS_USER_ERROR,
+    operations: operations
+});
+
+const checkIdIdpPair = (userid, useridp, dispatch) => {
+    if (userid === "" ^ useridp === "") {
+        let operations = {};
+        operations.error = "Введите IDP ID и IDP Мнемонику, либо оставьте оба поля пустыми";
+        dispatch(receiveOperationsStatsSearchError(operations));
+        return true
+    }
+};
+
 export const fetchOperationsStats = (userid, useridp, pageSize) => async (dispatch, getState) => {
+    if (checkIdIdpPair(userid, useridp, dispatch)) {
+        return
+    }
     dispatch(appLoading(1));
     if (userid === "" && useridp === "") {
         await Promise.all([
@@ -20,7 +37,6 @@ export const fetchOperationsStats = (userid, useridp, pageSize) => async (dispat
                 })
         ]);
     } else {
-        // если usedid + useridp, то бэк получает intKey и добавляет фильтр для сканера
         await Promise.all([
             fetch('/stats/operations/' + useridp + '/' + userid + '/')
                 .then((resp) => resp.json())
