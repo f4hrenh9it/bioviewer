@@ -2,17 +2,11 @@ import {RECEIVE_REG_INFO, RECEIVE_REG_INFO_ERR} from "../constants/ActionTypes";
 import {appLoading} from "./index";
 
 const checkIdIdpPair = (userid, useridp, dispatch) => {
-    if (!/(\d+)/.test(userid)) {
-        let profile = {};
-        profile.error = "id пользователя должен содержать цифры";
-        dispatch(receiveRegisterInfoError(profile));
-        return 1
-    }
-    if (!/(\w+)/.test(useridp)) {
-        let profile = {};
-        profile.error = "idp пользователя должен содержать только латинские буквы";
-        dispatch(receiveRegisterInfoError(profile));
-        return 1
+    if (userid === "" ^ useridp === "") {
+        let obj = {};
+        obj.error = "Введите IDP ID и IDP Мнемонику, либо оставьте оба поля пустыми";
+        dispatch(receiveRegisterInfoError(obj));
+        return true
     }
 };
 

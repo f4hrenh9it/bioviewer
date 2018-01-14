@@ -13,9 +13,9 @@ export const receiveOperationsStatsSearchError = (operations) => ({
 
 const checkIdIdpPair = (userid, useridp, dispatch) => {
     if (userid === "" ^ useridp === "") {
-        let operations = {};
-        operations.error = "Введите IDP ID и IDP Мнемонику, либо оставьте оба поля пустыми";
-        dispatch(receiveOperationsStatsSearchError(operations));
+        let obj = {};
+        obj.error = "Введите IDP ID и IDP Мнемонику, либо оставьте оба поля пустыми";
+        dispatch(receiveOperationsStatsSearchError(obj));
         return true
     }
 };
