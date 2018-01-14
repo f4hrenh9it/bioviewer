@@ -8,12 +8,32 @@ import (
 type PageableOperations struct {
 	Operations []map[string]interface{} `json:"operations"`
 	LastRowKey []byte `json:"last_row_key"`
+	Error string `json:"error"`
 }
 
-func NewPageableOperations() *PageableOperations {
-	return &PageableOperations{
-		make([]map[string]interface{}, 0),
-		nil,
+func NewPageableOperations(opts ...func(*PageableOperations)) *PageableOperations {
+	p := &PageableOperations{}
+	for _, option := range opts {
+		option(p)
+	}
+	return p
+}
+
+func OptionOperations(operations []map[string]interface{}) func(*PageableOperations) {
+	return func(p *PageableOperations) {
+		p.Operations = operations
+	}
+}
+
+func OptionLastRowKey(lastRowKey []byte) func(*PageableOperations) {
+	return func(p *PageableOperations) {
+		p.LastRowKey = lastRowKey
+	}
+}
+
+func OptionErrorString(err string) func(*PageableOperations) {
+	return func(p *PageableOperations) {
+		p.Error = err
 	}
 }
 

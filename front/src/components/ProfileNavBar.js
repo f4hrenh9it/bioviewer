@@ -1,13 +1,15 @@
 import React from 'react';
 import {Button, FormControl, Glyphicon, Navbar} from 'react-bootstrap';
-import {addUserId, addUserIdp, fetchOriginalsRows, fetchUpdateProfile} from "../actions/index";
+import {addUserId, addUserIdp} from "../actions/index";
+import {fetchUpdateProfile} from "../actions/fetchUpdateProfile";
+import {fetchOperationsStats} from "../actions/fetchOperationsStats";
 import {connect} from "react-redux";
 import './ProfileNavBar.css';
 import {Link} from "react-router-dom";
-import {fetchOperationsStatsForUser} from "../actions";
+import {OPERATIONS_PAGE_SIZE} from "../constants/RenderingConstants";
 
 export function ProfileNavBar({addUserId, userid, addUserIdp, useridp,
-                                  fetchUpdateProfile, fetchOriginalsRows, fetchOperationsStatsForUser}) {
+                                  fetchUpdateProfile, fetchOperationsStatsForUser}) {
 
     function handleChangeIds(event) {
         event.preventDefault();
@@ -40,8 +42,9 @@ export function ProfileNavBar({addUserId, userid, addUserIdp, useridp,
             </div>
             <div className="col-xs-2">
                 <Link to='/statistics'>
+                    {console.log("OPER = " + OPERATIONS_PAGE_SIZE)}
                     <Button className="btn btn-primary btn-block"
-                        onClick={() => fetchOperationsStatsForUser(userid, useridp)}>
+                        onClick={() => fetchOperationsStatsForUser(userid, useridp, OPERATIONS_PAGE_SIZE)}>
                         <Glyphicon glyph="stats"/>&nbsp;Статистика
                     </Button>
                 </Link>
@@ -65,8 +68,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     fetchUpdateProfile: (userid, useridp) => dispatch(fetchUpdateProfile(userid, useridp)),
-    fetchOriginalsRows: (userid, useridp) => dispatch(fetchOriginalsRows(userid, useridp)),
-    fetchOperationsStatsForUser: (userid, useridp) => dispatch(fetchOperationsStatsForUser(userid, useridp)),
+    fetchOperationsStatsForUser: (userid, useridp, OPERATIONS_PAGE_SIZE) =>
+        dispatch(fetchOperationsStats(userid, useridp, OPERATIONS_PAGE_SIZE)),
     addUserId: (userid) => dispatch(addUserId(userid)),
     addUserIdp: (useridp) => dispatch(addUserIdp(useridp))
 });

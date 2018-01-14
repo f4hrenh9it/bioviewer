@@ -1,5 +1,6 @@
 import React from 'react';
 import {LoadingBar} from "./ProfileLoading";
+import {ErrorBar} from "./ProfileError";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import ReactTable from 'react-table'
@@ -7,11 +8,12 @@ import "react-table/react-table.css";
 
 import './Statistics.css';
 
-export const Statistics = ({operationsUser, loading}) => (
+export const Statistics = ({operationsUserPaged_reducer, loading}) => (
     <div>
         {loading ? <LoadingBar loading={loading}/> :
+            operationsUserPaged_reducer.error ? <ErrorBar error={operationsUserPaged_reducer.error}/> :
             <ReactTable
-                data={operationsUser}
+                data={operationsUserPaged_reducer.operations}
                 columns={[
                     {
                         Header: "address",
@@ -46,7 +48,7 @@ export const Statistics = ({operationsUser, loading}) => (
 );
 
 const mapStateToProps = state => ({
-    operationsUser: state.operationsUser_reducer,
+    operationsUserPaged_reducer: state.operationsUserPaged_reducer,
     loading: state.loading_reducer,
 });
 

@@ -38,6 +38,8 @@ func GetRouter(opts ...func(*gin.Engine)) *gin.Engine {
 		v1.GET("/stats/operations/", GetStatsOperations)
 		v1.GET("/stats/operations/:idp/:id/", GetStatsOperations)
 		v1.GET("/stats/operationsPaged/:rowKeyFrom/:pageSize/", GetStatsOperations)
+		//v1.GET("/stats/operationsPaged/:rowKeyFrom/:pageSize/:idp/:id/", GetStatsOperations)
+		// нет реальных данных чтобы проверить, надо генерить или ждать
 	}
 
 	return r

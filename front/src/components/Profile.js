@@ -3,12 +3,10 @@ import './Profile.css';
 import {ProfileRegisterInfo} from "./ProfileRegisterInfo";
 import {ProfileOriginals} from "./ProfileOriginals";
 import {ProfileStats} from "./ProfileStats";
-import {ProfileError} from "./ProfileError";
-import {Row, Col} from 'react-bootstrap'
+import {Col, Row} from 'react-bootstrap'
 
 export const Profile = (props) => (
     <div>
-        {props.regProfile.error ? <ProfileError error={props.regProfile.error}/> :
         <div>
             <Row>
                 <ProfileStats {...props}/>
@@ -20,6 +18,5 @@ export const Profile = (props) => (
                 <ProfileOriginals {...props}/>
             </Col>
         </div>
-        }
     </div>
 );

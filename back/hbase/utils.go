@@ -19,7 +19,14 @@ func FillFakeOperations(amount int) {
 	for i := 0; i < amount; i++ {
 		var err error
 		key := uuid.Must(uuid.NewV4(), err)
-		values := map[string]map[string][]byte{"stats": {"op_type": []byte{0, 1, 0, 1}}}
+		values := map[string]map[string][]byte{
+			"stats": {
+				"op_type": []byte("REGISTRATION"),
+				"date": []byte("1515882608"),
+				"empl_sign": []byte(""),
+				"info_system": []byte("TEST_SYS"),
+				"address": []byte("Moscow, Kremlin"),
+				}}
 		putRequest, err := hrpc.NewPutStr(context.Background(), OPERATIONS_TABLE, key.String(), values)
 		_, err = Client.Put(putRequest)
 		util.CheckErr(err)

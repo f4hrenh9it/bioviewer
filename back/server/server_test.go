@@ -97,13 +97,13 @@ func TestGetStatsOperationsForAllNoPagination(t *testing.T) {
 // operations = (iterations x pageSize) = 189 x 25 = 4725
 // operations_test = 189 x 25 = 4725
 func TestGetStatsOperationsForAllWithPagination(t *testing.T) {
-	batchSize := 25
+	batchSize := 10
 	startRow := "NULL"
 	hbase.DeleteFakeOperations()
 	hbase.CreateFakeOperations()
-	hbase.FillFakeOperations(4725)
+	hbase.FillFakeOperations(10000)
 
-	for i := 0; i < 189; i++ {
+	for i := 0; i < 10; i++ {
 		url := fmt.Sprintf("http://%s:%d/stats/operationsPaged/%s/%d/", host, port, startRow, batchSize)
 		resp, err := http.Get(url)
 		util.CheckErr(err)

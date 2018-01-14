@@ -98,11 +98,17 @@ func GetStatsOperations(c *gin.Context) {
 		}
 	} else {
 		intKey, err := hbase.GetInternalKey(idp, id)
-		util.CheckErr(err)
-		logger.Slog.Infow("Получаем операции по idp и id",
-			"idp", idp,
-			"id", id)
-		operations := hbase.GetStatsOperations(stats.OptionUserPrefixFilter(intKey))
-		c.JSON(200, operations)
+		if err != nil {
+			operations := stats.NewPageableOperations(
+				stats.OptionErrorString("пользователь не зарегистрирован в idp"),
+			)
+			c.JSON(200, operations)
+		} else {
+			logger.Slog.Infow("Получаем операции по idp и id",
+				"idp", idp,
+				"id", id)
+			operations := hbase.GetStatsOperations(stats.OptionUserPrefixFilter(intKey))
+			c.JSON(200, operations)
+		}
 	}
 }

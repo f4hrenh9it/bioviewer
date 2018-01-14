@@ -1,7 +1,7 @@
 import React from 'react';
 import {Jumbotron, Glyphicon} from 'react-bootstrap';
 
-export const ProfileError = props => (
+export const ErrorBar = props => (
     <div>
         <Jumbotron>
             <p className="text-center">
