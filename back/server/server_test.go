@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"github.com/lulunevermind/bioviewer/back/hbase/stats"
+	"github.com/lulunevermind/bioviewer/back/phoenix"
 )
 
 var host = "localhost"
@@ -22,6 +23,10 @@ var userid = 1000349572
 //var userid = 240631324
 
 func TestMain(m *testing.M) {
+	phoenix.ConnectAvatica(
+		"fr00nbpnode01",
+		"8765",
+	)
 	r := GetRouter()
 	go r.Run()
 	<-time.After(1 * time.Second)
@@ -29,12 +34,14 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetOriginalsRows(t *testing.T) {
-	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%d/", host, port, idp, userid)
+	modality := "sound"
+	url := fmt.Sprintf("http://%s:%d/originals/rows/%s/%s/%d/", host, port, modality, idp, userid)
 	resp, err := http.Get(url)
 	util.CheckErr(err)
 	rows := &[]string{}
 	json.NewDecoder(resp.Body).Decode(rows)
-	assert.Equal(t, 4, len(*rows))
+	assert.Equal(t, 5, len(*rows))
+	fmt.Printf("Res = %s", rows)
 }
 
 func TestGetCountOriginals(t *testing.T) {
@@ -112,4 +119,9 @@ func TestGetStatsOperationsForAllWithPagination(t *testing.T) {
 		fmt.Printf("[Operations len = %d] [last row = %s]\n", len(res.Operations), res.LastRowKey)
 		startRow = string(res.LastRowKey)
 	}
+}
+
+func TestPhoenixRequest(t *testing.T) {
+	res := phoenix.Request("select \"base\".* from \"_metadata_for_science\" where \"base\".\"information_system\" = 'TK_UBS_DEV'")
+	assert.Equal(t, 127, len(res))
 }

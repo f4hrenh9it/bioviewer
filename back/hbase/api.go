@@ -34,13 +34,20 @@ func GetInternalKey(idp string, userid string) ([]byte, error) {
 
 // Получает ключи оригиналов по внутреннему ключу
 func GetOriginalRows(modality Modality, intKey []byte) [][]byte {
-	logger.Slog.Infow("Получаем список ключей оригиналов при помощи скана без поднятия CF",
+	logger.Slog.Infow("Получаем список ключей оригиналов при помощи скана только rowKey",
 		"modality", modality.String(), "table", ORIGINALPREFIX+modality.String(),
 		"intKey", intKey)
 
-	pFilter := filter.NewPrefixFilter(intKey)
 	keyOnlyFilter := filter.NewKeyOnlyFilter(false)
-	filterList := filter.NewList(1, pFilter, keyOnlyFilter)
+
+	var rrList []*filter.RowRange
+	startRow := string(intKey) + "\x00"
+	stopRow := string(intKey) + "\xFF"
+	rr := filter.NewRowRange([]byte(startRow), []byte(stopRow), false, true)
+	rrList = append(rrList, rr)
+	mrrFilter := filter.NewMultiRowRangeFilter(rrList)
+
+	filterList := filter.NewList(1, keyOnlyFilter, mrrFilter)
 	scanRequest, err := hrpc.NewScanStr(context.Background(),
 		ORIGINALPREFIX+modality.String(),
 		hrpc.Filters(filterList))
@@ -48,13 +55,14 @@ func GetOriginalRows(modality Modality, intKey []byte) [][]byte {
 
 	scanRsp := Client.Scan(scanRequest)
 	util.CheckErr(err)
-	keys := [][]byte{}
+
+	keys := make([][]byte, 0)
 	for {
-		if orig, err := scanRsp.Next(); err == nil {
-			keys = append(keys, orig.Cells[0].Row)
-		} else {
+		orig, err := scanRsp.Next()
+		if err != nil {
 			break
 		}
+		keys = append(keys, orig.Cells[0].Row)
 	}
 	return keys
 }
