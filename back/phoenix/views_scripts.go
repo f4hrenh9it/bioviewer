@@ -23,7 +23,6 @@ func ApplyViews() {
 		logger.Slog.Infow("Читаем sql DDL из файла","sqlfile", path)
 		view, err := ioutil.ReadAll(f)
 		cmds := SplitViewCommands(view)
-		logger.Slog.Infow("длина","a", len(cmds))
 		for _, cmd := range cmds {
 			logger.Slog.Infow("Применяем sql DDL","sql", cmd)
 			res := Request(cmd)

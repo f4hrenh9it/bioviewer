@@ -96,11 +96,19 @@ func GetOriginals(modality Modality, intKey []byte, future chan *OriginalsFuture
 		"modality", modality.String(), "table", ORIGINALPREFIX+modality.String(),
 		"intKey", intKey)
 
-	pFilter := filter.NewPrefixFilter(intKey)
+	var rrList []*filter.RowRange
+	startRow := string(intKey) + "\x00"
+	stopRow := string(intKey) + "\xFF"
+	rr := filter.NewRowRange([]byte(startRow), []byte(stopRow), false, true)
+	rrList = append(rrList, rr)
+	mrrFilter := filter.NewMultiRowRangeFilter(rrList)
+
+	//pFilter := filter.NewPrefixFilter(intKey)
+
 	families := map[string][]string{"modality": {"data", "valid"}}
 	scanRequest, err := hrpc.NewScanStr(context.Background(),
 		ORIGINALPREFIX+modality.String(),
-		hrpc.Filters(pFilter), hrpc.Families(families))
+		hrpc.Filters(mrrFilter), hrpc.Families(families))
 	util.CheckErr(err)
 
 	scanRsp := Client.Scan(scanRequest)

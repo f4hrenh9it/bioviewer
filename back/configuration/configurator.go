@@ -14,6 +14,7 @@ type Configuration struct {
 	PhoenixHostName string   `yaml:"phoenix_host_name"`
 	PhoenixPort     string   `yaml:"phoenix_port"`
 	Views           []string `yaml:"views"`
+	BackendPort     string   `yaml:"backend_port"`
 }
 
 func LoadConfiguration(configPath string) {

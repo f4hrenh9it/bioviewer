@@ -1,5 +1,6 @@
 phoenix_host_name: fr00nbpnode01
 phoenix_port: 8765
+backend_port: 8082
 views:
   - phoenix/views/_operator.sql
   - phoenix/views/_metadata_for_science.sql

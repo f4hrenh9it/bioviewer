@@ -17,10 +17,27 @@ import (
 )
 
 var host = "localhost"
-var port = 8080
+var port = 8082
 var idp = "esia"
 var userid = 1000349572
-//var userid = 240631324
+
+//1000318437                                         column=meta:id, timestamp=1522829166280, value=\xDB\x00\x00\x00\x00\x00\x05\x00
+//1000318437                                         column=meta:reg_date, timestamp=1522829166280, value=\x00\x00\x01b\x8F\xB0\xFEx
+//1000318438                                         column=extended:active, timestamp=1522835211944, value=\xFF
+//1000318438                                         column=extended:countFailed, timestamp=1522836274945, value=\x00\x00\x00\x00
+//1000318438                                         column=meta:act_date, timestamp=1522835211944, value=\x00\x00\x01b\x90\x0D?\xD9
+//1000318438                                         column=meta:id, timestamp=1522835211944, value=\xE4\x00\x00\x00\x00\x00\x05\x00
+//1000318438                                         column=meta:reg_date, timestamp=1522835211944, value=\x00\x00\x01b\x90\x0D?\xD9
+//1000318443                                         column=extended:active, timestamp=1522839381664, value=\xFF
+//1000318443                                         column=extended:countFailed, timestamp=1522840250718, value=\x00\x00\x00\x00
+//1000318443                                         column=meta:act_date, timestamp=1522839381664, value=\x00\x00\x01b\x90L\xDD\xDA
+//1000318443                                         column=meta:id, timestamp=1522839381664, value=\xEB\x00\x00\x00\x00\x00\x05\x00
+//1000318443                                         column=meta:reg_date, timestamp=1522839381664, value=\x00\x00\x01b\x90E\x80\x8C
+//1000318449                                         column=extended:active, timestamp=1522839937903, value=\xFF
+//1000318449                                         column=extended:countFailed, timestamp=1522841148895, value=\x00\x00\x00\x00
+//1000318449                                         column=meta:act_date, timestamp=1522839937903, value=\x00\x00\x01b\x90U\x5C\x86
+//1000318449                                         column=meta:id, timestamp=1522839937903, value=\xED\x00\x00\x00\x00\x00\x05\x00
+//1000318449                                         column=meta:reg_date, timestamp=1522839937903, value=\x00\x00\x01b\x90U\x5C\x86
 
 func TestMain(m *testing.M) {
 	phoenix.ConnectAvatica(
@@ -28,7 +45,7 @@ func TestMain(m *testing.M) {
 		"8765",
 	)
 	r := GetRouter()
-	go r.Run()
+	go r.Run("0.0.0.0:" + string(port))
 	<-time.After(1 * time.Second)
 	os.Exit(m.Run())
 }

@@ -29,5 +29,5 @@ func main() {
 		server.ZapLoggerInstance(logger.Logger),
 		server.WithCors(),
 	)
-	r.Run()
+	r.Run("0.0.0.0:" + configuration.C.BackendPort)
 }
